@@ -1,0 +1,51 @@
+.infocard-title {
+  font-weight: bold;
+}
+.infocard-logo {
+  display: inline-block;
+  width: 200px;
+  height: 100px;
+  text-align: center;
+}
+.infocard-info {
+  font-weight: bold;
+}
+.infocard-rating {
+
+}
+.infocard-takeme {
+  color: red;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 30px;
+  cursor: pointer;
+}
+.infocard-phone {
+  color: blue;
+  text-decoration: none;
+}
+.infocard-website {
+  text-decoration: none;
+  font-weight: bold;
+}
+.infocard-y {
+  font-size: 20px;
+  color: #eca70c;
+  fill: #eca70c;
+  width: 25px;
+  height: 25px;
+}
+.infocard-br {
+  font-size: 20px;
+  color: #984a25;
+  fill: #984a25;
+  width: 25px;
+  height: 25px;
+}
+.infocard-bl {
+  font-size: 20px;
+  color: #cccccc;
+  fill: #cccccc;
+  width: 25px;
+  height: 25px;
+}

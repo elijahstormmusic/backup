@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="articles.css">
+  <link rel="stylesheet" href="../theme.css">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+	<title>Arrival KC</title>
+</head>
+<body>
+  <img id="bgImage" src="../background.jpg"></img>
+
+  <!-- Main Page -->
+  <div class="main-container" id="container">
+    <div class="w3-padding-32 w3-center">
+			<div class="w3-panel w3-padding-32 ar-pallette-red w3-card w3-display-container">
+
+	      <div id="header">Please Log In</div>
+
+	      <div id="LOGIN">
+	        <div id="error">Error <div id="errno"></div></div>
+	        <form autocomplete="on">
+	    			<input class="textInput" type="text" id="username" placeholder="USER ID" autocomplete="username"></input>
+	    			<br />
+	    			<input class="textInput" type="text" id="auth_key" placeholder="AUTHENTICATION KEY"></input>
+	    			<br />
+	    			<input class="textInput" type="password" id="pass" placeholder="PASS CODE" autocomplete="current-password"></input>
+	    			<br />
+	          <br />
+	      		<div class="button" id="sendBtn" onclick="validateSession()">LOGIN</div>
+	    		</form>
+	      </div>
+
+				<div id="ARTICLE_FORM1" class='hidden'>
+	        <form>
+	    			<input class="textInput" type="text" id="input_title" placeholder="TITLE"></input>
+	    			<br />
+
+	    			<input class="textInput" type="text" id="input_author" placeholder="AUTHOR"></input>
+	    			<br /><br />
+
+						Category
+						<br />
+						<select name="category" id="input_category" class="textInput ar-hover-pointer">
+							<optgroup label="Lifestyles">
+								<option value="sports">Sports</option>
+								<option value="fitness">Fitness</option>
+								<option value="auto">Auto</option>
+								<option value="thc">THC</option>
+								<option value="travel">Travel</option>
+								<option value="showerThoughts">Shower Thoughts</option>
+							</optgroup>
+							<optgroup label="Arts">
+								<option value="film">Film</option>
+								<option value="music">Music</option>
+								<option value="art">Art</option>
+								<option value="fashion">Fashion</option>
+								<option value="anime">Anime</option>
+								<option value="comics">Comics</option>
+								<option value="comedy">Comedy</option>
+								<option value="shortStories">Short Stories</option>
+							</optgroup>
+							<optgroup label="News">
+								<option value="world">World</option>
+								<option value="currentEvents">Current Events</option>
+								<option value="tech">Tech</option>
+								<option value="finance">Finance</option>
+								<option value="space">Space</option>
+								<option value="kansasCity">Kansas City</option>
+							</optgroup>
+						</select>
+
+						<br /><br />
+						The date the article was written
+						<br />
+	    			<input class="textInput" type="date" id="input_date"></input>
+	    			<br /><br />
+
+						Search terms (to help users find this article)
+						<br />
+	    			<input class="textInput" type="text" id="input_topic" placeholder="TOPIC"></input>
+	    			<br /><br />
+
+	    			<br />
+
+	      		<div class="w3-half w3-right button" onclick="nextPage()">NEXT</div>
+	    		</form>
+	      </div>
+
+				<div id="ARTICLE_FORM2" class='hidden'>
+	        <form>
+	          Please seperate each paragraph with a new paragraph line. (enter)
+	          <br />
+	          <textarea class="textInput" height='400px' id="input_article" placeholder="ARTICLE"></textarea>
+	          <br />
+	          <label id="imageUploadLabel" class="textInput ar-text-blue" for="input_image" style="cursor:pointer;">Upload all the images for the article here.</label>
+	          <input class="hidden" type="file" accept="image/*" multiple id="input_image" placeholder="IMAGES"></input>
+	          <div id="image_holder"></div>
+	          <div class="w3-half w3-left button" onclick="lastPage()">BACK</div>
+	          <div class="w3-half w3-left button" onclick="confirmPage()">FINALIZE</div>
+
+	          <!-- Modal for full size images on click-->
+	          <div id="modal01" class="w3-modal w3-black" onclick="this.style.display='none'">
+	            <span class="w3-button w3-large w3-black w3-display-topright" title="Close Modal Image"><i class="fa fa-remove"></i></span>
+	            <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
+	              <img id="img01" class="w3-image">
+	              <p id="caption" class="w3-opacity w3-large"></p>
+	            </div>
+	          </div>
+	        </form>
+	      </div>
+
+				<div id="ARTICLE_FORM3" class='hidden'>
+	        <p>Proof-read and organize where you want the pictures to go.</p>
+	        <br />
+	        <div id="article_example"></div>
+	        <form>
+	      		<div class="w3-half w3-left button" onclick="backToDataPage()">BACK</div>
+	      		<div class="w3-half w3-left button" onclick="sendArticleToDatabase()">SUBMIT</div>
+	    		</form>
+	        <br /><br /><br />
+	      </div>
+
+				<div id="ARTICLE_FORM4" class='hidden'>
+	        <div id="progress-container"><div id="progress-value"></div></div>
+			    <br />
+					<span class="flash">Uploading Content...</span>
+			    <br />
+					<div class="lds-ellipsis"><div></div><div></div><div></div></div>
+	        <br /><br /><br />
+	      </div>
+
+				<div id="ARTICLE_FORM5" class='hidden'>
+	        <p>The article was successfully uploaded! Congrats!</p>
+	        <br /><br /><br />
+	      </div>
+
+	  	</div>
+		</div>
+  </div>
+
+<!-- Online Client Service -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="articles.js"></script>
+
+</body>
+</html>

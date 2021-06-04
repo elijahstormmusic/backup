@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="team.css">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+	<title>Arrival KC</title>
+</head>
+<body>
+  <img id="bgImage" src="background.jpg"></img>
+
+  <!-- Main Page -->
+  <div class="main-container" id="container">
+    <div class="w3-padding-32 w3-center">
+			<div class="w3-panel w3-padding-32 ar-pallette-red w3-card w3-display-container">
+	      <div id="header">You've Arrived to Arrival's Data Management System</div>
+
+				<div class="w3-quarter">&nbsp;</div>
+
+				<div class="w3-half w3-panel">
+					<p class="w3-card ar-pallette-cream ar-text-black w3-round-large">What are you looking to do?</p>
+
+					<button class="w3-button w3-margin w3-card ar-pallette-blue w3-round-xlarge"
+							onclick="window.location.href = 'articles';">
+						Upload Article
+					</button>
+					<button class="w3-button w3-margin w3-card ar-pallette-blue w3-round-xlarge"
+							onclick="window.location.href = 'partners';">
+						Partners & Promotions
+					</button>
+
+					<p class="w3-card ar-pallette-cream ar-text-black w3-round-large">Be prepared to log in with your user name, auth key, and password.</p>
+				</div>
+
+				<div class="w3-quarter">&nbsp;</div>
+
+			</div>
+		</div>
+  </div>
+
+<!-- Online Client Service -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="team.js"></script>
+
+</body>
+</html>

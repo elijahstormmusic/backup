@@ -1,0 +1,28 @@
+
+<html>
+<head>
+<script>
+window.onload = function() {
+  function onFailedDisable() {
+    let list = document.getElementsByClassName('ar-add-userlink');
+
+    for(let i=0;i<list.length;i++) {
+      list[i].style.visibility = 'hidden';
+    }
+  };
+
+  let userlink = window.location.href.split('?')[1];
+  if(userlink==null) {
+    onFailedDisable();
+    return;
+  }
+
+  let list = document.getElementsByClassName('ar-add-userlink');
+
+  for(let i=0;i<list.length;i++) {
+    list[i].href += '?' + userlink;
+  }
+};
+</script>
+</head>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="maps.css" rel="stylesheet">
+  <link rel="stylesheet" href="../includes/fa/css/all.min.css">
+  <style>
+    #map {
+      height: 100%;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="maps.js"></script>
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGiAXusfesRoqC7Nmanca3F1bHY0poyxc&libraries=geometry,places&callback=initMap">
+</script>
+</body>
+</html>

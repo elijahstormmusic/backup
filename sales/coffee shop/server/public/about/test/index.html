@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="../../team/theme.css">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+	<title>Arrival KC</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+	<style>
+		.ar-cell-w {
+			width: 70px !important;
+		}
+	</style>
+</head>
+<body>
+  <img id="bgImage" src="../../team/background.jpg"></img>
+
+  <!-- Main Page -->
+  <div class="main-container" id="container" style="max-width: 750px; min-width: 725px;">
+    <div class="w3-padding-32 w3-center">
+			<div class="w3-panel w3-padding-32 ar-pallette-red w3-card w3-display-container">
+
+	      <div id="header">Testing</div>
+
+				<div id="test-stop-button" class="w3-center w3-card w3-button ar-pallette-blue ar-hover-yellow">STOP</div>
+				<div id="rerun" class="w3-center w3-card w3-button ar-pallette-blue ar-hover-yellow">Run Again</div>
+				<br />
+
+	      <div id="data-output">
+
+					<div id="titles" class="w3-quarter w3-padding">
+
+						<div class="w3-padding">
+							<div class="">&nbsp;</div>
+						</div>
+
+					</div>
+
+					<div class="w3-rest w3-padding">
+
+						<div id="data-entry" class="w3-table">
+
+							<div class="w3-cell-row">
+
+								<div class="w3-cell w3-padding">
+									<div class="w3-card ar-pallette-blue ar-cell-w">Retention</div>
+								</div>
+								<div class="w3-cell w3-padding">
+									<div class="w3-card ar-pallette-blue ar-cell-w">Minimum</div>
+								</div>
+								<div class="w3-cell w3-padding">
+									<div class="w3-card ar-pallette-blue ar-cell-w">Maxium</div>
+								</div>
+								<div class="w3-cell w3-padding">
+									<div class="w3-card ar-pallette-blue ar-cell-w">Average</div>
+								</div>
+								<div class="w3-cell w3-padding">
+									<div class="w3-card ar-pallette-blue ar-cell-w">Progress</div>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<div class="w3-center w3-half">
+						<div class="chart w3-padding w3-margin w3-panel w3-card ar-pallette-cream w3-round-large">
+						  <canvas height="400px" id="effectiveness1-chart"></canvas>
+						</div>
+					</div>
+					<div class="w3-center w3-half">
+						<div class="chart w3-padding w3-margin w3-panel w3-card ar-pallette-cream w3-round-large">
+						  <canvas height="400px" id="effectiveness2-chart"></canvas>
+						</div>
+					</div>
+
+	      </div>
+
+			</div>
+		</div>
+  </div>
+	<script src="test.js"></script>
+</body>
+</html>

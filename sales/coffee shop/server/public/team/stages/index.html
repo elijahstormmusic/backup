@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="stages.css">
+  <link rel="stylesheet" href="../theme.css">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+	<title>Arrival KC</title>
+</head>
+<body>
+  <img id="bgImage" src="../background.jpg"></img>
+
+  <!-- Main Page -->
+  <div class="main-container" id="container">
+    <div class="w3-padding-32 w3-center">
+			<div class="w3-panel w3-padding-32 ar-pallette-red w3-card w3-display-container">
+
+	      <div id="header">Please Log In</div>
+
+	      <div id="LOGIN">
+	        <div id="error">Error <div id="errno"></div></div>
+	        <form autocomplete="on">
+	    			<input class="textInput" type="text" id="username" placeholder="USER ID" autocomplete="username"></input>
+	    			<br />
+	    			<input class="textInput" type="text" id=".auth_key" placeholder="AUTHENTICATION KEY"></input>
+	    			<br />
+	    			<input class="textInput" type="password" id="pass" placeholder="PASS CODE" autocomplete="current-password"></input>
+	    			<br />
+	          <br />
+	      		<div class="button" id="sendBtn" onclick="validateSession()">LOGIN</div>
+	    		</form>
+	      </div>
+
+				<div id="INTERNAL_FORM1" class='w3-panel hidden'>
+
+						<div class="w3-margin">
+							<div class="w3-button ar-hover-pallette-yellow w3-blue w3-round-xlarge w3-mobile" onclick="openPartnerDataForm()">
+								+ CREATE NEW
+							</div>
+							<div class="w3-button ar-hover-pallette-yellow w3-teal w3-round-xlarge w3-mobile" onclick="focusAndBlink(document.querySelector('#search-partner-input'))">
+								# UPDATE EXISTING
+							</div>
+							<div class="w3-margin">
+								Think these people might already be added? Check and see. Don't add duplicates!
+							</div>
+						</div>
+
+						<hr class="w3-rounded" />
+
+						<div id="search-partners" class="w3-margin">
+							<input id="search-partner-input" class="ar-blink w3-round-xlarge w3-padding" type="text" placeholder="SEARCH" oninput="searchTextChange()" style="width: 80%;">
+						</div>
+
+						<div id="search-partners-results" class="w3-padding-32 w3-container"></div>
+
+	      </div>
+
+	      <div id="INTERNAL_FORM2" class='hidden'>
+
+					<div id="partner-data-information-display w3-align-left">
+
+						Title
+						<br />
+						<input class="textInput" type="text" id="input_title" placeholder="TITLE"></input>
+
+						<br /><br />
+
+						Short Description
+						<br />
+						<textarea class="textInput" id="input_info" placeholder="SHORT DESCRIPTION"></textarea>
+
+						<br /><br />
+
+						Industry
+						<br />
+						<select name="industry" id="input_industry" class="textInput ar-hover-pointer">
+							<optgroup label="Food">
+								<option value="diner">Dine In</option>
+								<option value="fastfood">Fast Food</option>
+								<option value="coffee">Coffee</option>
+								<option value="bar">Bar</option>
+							</optgroup>
+							<optgroup label="Arts">
+								<option value="musicstu">Music Studio</option>
+								<option value="musicshop">Music Gear</option>
+								<option value="photostu">Photo Studio</option>
+							</optgroup>
+							<optgroup label="Cosmetics">
+								<option value="hair">Hair Salon</option>
+								<option value="clothing">Clothing</option>
+								<option value="shoes">Shoes</option>
+							</optgroup>
+						</select>
+
+						<br /><br />
+
+						Contact Information
+						<br />
+						<div id="contact-info-container" class="w3-container"></div>
+						<button class="w3-button ar-hover-pallette-yellow w3-round-xlarge w3-blue ar-text-white" onclick="addContactInfo()">+ Add</button>
+
+						<br /><br />
+
+						<div class="w3-container">
+							<div class="w3-cell-row">
+								<p class="w3-cell w3-hide-small">Latitude</p>
+								<p class="w3-cell w3-hide-small">Longitude</p>
+							</div>
+							<div class="w3-cell-row" style="margin-right: 10px;">
+								<input class="w3-cell w3-mobile textInput-half" type="number" id="input_lat" placeholder="LATITUDE"></input>
+								<input class="w3-cell w3-mobile textInput-half" type="number" id="input_lng" placeholder="LONGITUDE"></input>
+							</div>
+						</div>
+
+						<br /><br />
+
+						<label id="imageUploadLabel" class="w3-button ar-hover-pallette-yellow textInput ar-text-blue" for="input_image" style="cursor: pointer;">Add Images</label>
+	          <input class="hidden" type="file" accept="image/*" multiple id="input_image" placeholder="IMAGES"></input>
+	          <div id="image_holder"></div>
+
+	          <br /><br />
+
+						Reason for Change
+						<br />
+						<textarea class="textInput ar-blink" id="input_request" placeholder="e.g. 'adding new business', or 'fixing spelling'"></textarea>
+
+						<br /><br />
+
+						<div class="w3-half w3-right button" onclick="viewConfirmPopup()">NEXT</div>
+
+	          <!-- Modal for full size images on click-->
+	          <div id="modal01" class="w3-modal w3-black" onclick="this.style.display='none'">
+	            <span class="w3-button ar-hover-pallette-yellow w3-large w3-black w3-display-topright" title="Close Modal Image"><i class="fa fa-remove"></i></span>
+	            <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
+	              <img id="img01" class="w3-image">
+	              <p id="caption" class="w3-opacity w3-large"></p>
+	            </div>
+	          </div>
+
+					</div>
+
+	      </div>
+	      <div id="INTERNAL_FORM3" class='hidden'>
+
+					<div class="w3-panel w3-margin w3-display-container">
+						<p id="partner-data-loading-display" class="ar-flash">Loading...</p>
+					</div>
+
+	      </div>
+	      <div id="INTERNAL_FORM4" class='hidden'>
+
+					<div class="w3-panel w3-margin w3-display-container">
+		        <div id="progress-container"><div id="progress-value"></div></div>
+				    <br />
+						<span class="ar-flash">Uploading Content...</span>
+				    <br />
+						<div class="lds-ellipsis"><div></div><div></div><div></div></div>
+					</div>
+
+	      </div>
+				<div id="INTERNAL_FORM5" class='hidden'>
+
+					<div class="w3-panel w3-margin ar-pallette-cream ar-text-black w3-card w3-display-container">
+		        <p>Your changes were requested and are waiting approval! Congrats!</p>
+	        </div>
+
+	      </div>
+
+			</div>
+		</div>
+  </div>
+
+<!-- Online Client Service -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="stages.js"></script>
+
+</body>
+</html>

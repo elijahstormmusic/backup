@@ -1,0 +1,30 @@
+{
+  "name": "arrival-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arrivalkc/ARRIVAL.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arrivalkc/ARRIVAL/issues"
+  },
+  "homepage": "https://github.com/arrivalkc/ARRIVAL#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.23.0",
+    "express": "^4.17.1",
+    "mongo": "^0.1.0",
+    "mongojs": "^3.1.0",
+    "mongoose": "^5.6.6",
+    "nodemailer": "^6.4.6",
+    "socket.io": "^2.2.0"
+  }
+}

@@ -1,0 +1,213 @@
+
+<html>
+<head>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+window.onload = function() {
+  function onFailedDisable() {
+    let list = document.getElementsByClassName('ar-add-userlink');
+
+    for(let i=0;i<list.length;i++) {
+      list[i].style.visibility = 'hidden';
+    }
+  };
+
+  let userlink = window.location.href.split('?')[1];
+  if(userlink==null) {
+    onFailedDisable();
+    return;
+  }
+
+  let list = document.getElementsByClassName('ar-add-userlink');
+
+  for(let i=0;i<list.length;i++) {
+    list[i].href += '?' + userlink;
+  }
+
+  let socket = io();
+  document.getElementById('save-state-btn').onclick = function() {
+    if(document.getElementById('save-state-btn').className.indexOf('disabled')!=-1) return;
+    socket.emit('userdata update', {
+      type: 'settings',
+      link: userlink,
+      password: document.getElementById('password-check-input').value,
+      value: {
+        email_notifs: document.getElementById('email-notifs-main-switch').checked,
+      }
+    });
+  };
+};
+
+function state_changed(value) {
+  if(document.getElementById('password-check-input').value=='') return;
+  if(value) {
+    document.getElementById('save-state-btn').className = 'w3-btn w3-round w3-blue';
+  } else {
+    document.getElementById('save-state-btn').className = 'w3-btn w3-round w3-grey w3-disabled';
+  }
+}
+
+function email_notif_main_switch(e){
+  if(e.checked) {
+    document.getElementById('email-notifs-main-switch-label').innerHTML = 'on';
+    state_changed(false);
+  } else {
+    document.getElementById('email-notifs-main-switch-label').innerHTML = 'off';
+    state_changed(true);
+  }
+}
+
+function input_password(element) {
+  if(element.value=='')
+    document.getElementById('hidden-details').className = 'hidden';
+  else document.getElementById('hidden-details').className = '';
+}
+</script>
+<style>
+body{
+  margin: 0px !important;
+  background: #F15D5D;
+}
+.arr-switch{
+  cursor: pointer !important;
+  user-select: none;
+}
+#save-state-btn{
+  transition: all .3s ease;
+}
+#hidden-details{
+  transition: opacity 1s ease;
+  opacity: 1;
+}
+.hidden{
+  opacity: 0 !important;
+  cursor: default !important;
+}
+</style>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+<table class="wrapper" style="border-collapse: collapse;table-layout: fixed;min-width: 320px;width: 100%;background-color: #F15D5D;" cellpadding="0" cellspacing="0" role="presentation"><tbody><tr><td>
+      <div role="banner">
+        <div class="preheader" style="margin: 0 auto;max-width: 560px;min-width: 280px; width: 280px;width: calc(28000% - 167440px);">
+          <div style="border-collapse: collapse;display: table;width: 100%;">
+          <!--[if (mso)|(IE)]><table align="center" class="preheader" cellpadding="0" cellspacing="0" role="presentation"><tr><td style="width: 280px" valign="top"><![endif]-->
+            <div class="snippet" style="display: table-cell;Float: left;font-size: 12px;line-height: 19px;max-width: 280px;min-width: 140px; width: 140px;width: calc(14000% - 78120px);padding: 10px 0 5px 0;color: #bdbdbd;font-family: Ubuntu,sans-serif;">
+              <p style="margin-top: 0;margin-bottom: 0;"> </p>
+            </div>
+          <!--[if (mso)|(IE)]></td><td style="width: 280px" valign="top"><![endif]-->
+
+          <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+          </div>
+        </div>
+        <div class="header" style="margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);" id="emb-email-header-container">
+        <!--[if (mso)|(IE)]><table align="center" class="header" cellpadding="0" cellspacing="0" role="presentation"><tr><td style="width: 600px"><![endif]-->
+          <div class="logo emb-logo-margin-box" style="font-size: 26px;line-height: 32px;margin-top: 6px;margin-bottom: 20px;color: #c3ced9;font-family: Roboto,Tahoma,sans-serif;margin-left: 20px;margin-right: 20px;" align="center">
+            <div class="logo-center" align="center" id="emb-email-header"><img style="display: block;height: auto;width: 100%;border: 0;max-width: 96px;" src="../../includes/img/logo/titleasset.png" alt="Arrival KC Logo" width="96"></div>
+          </div>
+        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+        </div>
+      </div>
+      <div>
+      <div class="layout one-col fixed-width stack" style="margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
+        <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #F9EDD3;">
+        <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-fixed-width" style="background-color: #F9EDD3;"><td style="width: 600px" class="w560"><![endif]-->
+          <div class="column" style="text-align: left;color: #787778;font-size: 16px;line-height: 24px;font-family: Ubuntu,sans-serif;">
+
+            <div style="margin-left: 20px;margin-right: 20px;margin-top: 24px;">
+      <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 1px;">&nbsp;</div>
+    </div>
+
+            <div style="margin-left: 20px;margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
+        <h1 style="margin-top: 0;margin-bottom: 0;font-style: normal;font-weight: normal;color: #565656;font-size: 30px;line-height: 38px;text-align: center;">Email Settings</h1><p style="margin-top: 20px;margin-bottom: 0;">&nbsp;<br>
+          Password confirmation
+        </p>
+        <p style="margin-top: 20px;margin-bottom: 20px;">
+          <input class="w3-input" type="password" id="password-check-input" onkeydown="input_password(this)">
+        </p>
+      </div>
+    </div>
+
+    <div id="hidden-details" class="hidden">
+
+            <div style="margin-left: 20px;margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
+          Email Notifications
+        </p>
+        <p style="margin-top: 20px;margin-bottom: 20px;">
+          <div class="arr-switch">
+            <input class="arr-switch" type="checkbox" checked id="email-notifs-main-switch" onclick="email_notif_main_switch(this)" role="switch" aria-checked="false">
+            <label class="arr-switch" for="email-notifs-main-switch"><strong><span id="email-notifs-main-switch-label">on</span></strong></label>
+          </div>
+        </p>
+        <p style="margin-top: 20px;margin-bottom: 20px;">
+          <div id="save-state-btn" class="w3-btn w3-round w3-grey w3-disabled">
+            SAVE
+          </div>
+        </p>
+      </div>
+    </div>
+
+    </div>
+
+            <div style="margin-left: 20px;margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;line-height: 10px;font-size: 1px;">&nbsp;</div>
+    </div>
+
+            <div style="margin-left: 20px;margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;line-height: 10px;font-size: 1px;">&nbsp;</div>
+    </div>
+
+            <div style="margin-left: 20px;margin-right: 20px;margin-bottom: 24px;">
+      <div style="mso-line-height-rule: exactly;line-height: 5px;font-size: 1px;">&nbsp;</div>
+    </div>
+
+          </div>
+        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+        </div>
+      </div>
+
+      <div style="mso-line-height-rule: exactly;line-height: 10px;font-size: 10px;">&nbsp;</div>
+
+
+      <div role="contentinfo">
+        <div class="layout email-footer stack" style="margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
+          <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;">
+          <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-email-footer"><td style="width: 400px;" valign="top" class="w360"><![endif]-->
+            <div class="column wide" style="text-align: left;font-size: 12px;line-height: 19px;color: #bdbdbd;font-family: Ubuntu,sans-serif;Float: left;max-width: 400px;min-width: 320px; width: 320px;width: calc(8000% - 47600px);">
+              <div style="margin-left: 20px;margin-right: 20px;margin-top: 10px;margin-bottom: 10px;">
+                <table class="email-footer__links" style="border-collapse: collapse;table-layout: fixed;" role="presentation" emb-web-links=""><tbody><tr role="navigation">
+
+                </tr></tbody></table>
+                <div style="font-size: 12px;line-height: 19px;margin-top: 20px;">
+                  <div>Arrival KC</div>
+                </div>
+                <!--[if mso]>&nbsp;<![endif]-->
+              </div>
+            </div>
+          <!--[if (mso)|(IE)]></td><td style="width: 200px;" valign="top" class="w160"><![endif]-->
+            <div class="column narrow" style="text-align: left;font-size: 12px;line-height: 19px;color: #bdbdbd;font-family: Ubuntu,sans-serif;Float: left;max-width: 320px;min-width: 200px; width: 320px;width: calc(72200px - 12000%);">
+              <div style="margin-left: 20px;margin-right: 20px;margin-top: 10px;margin-bottom: 10px;">
+
+              </div>
+            </div>
+          <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+          </div>
+        </div>
+        <div class="layout one-col email-footer" style="margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
+          <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;">
+          <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-email-footer"><td style="width: 600px;" class="w560"><![endif]-->
+            <div class="column" style="text-align: left;font-size: 12px;line-height: 19px;color: #bdbdbd;font-family: Ubuntu,sans-serif;">
+              <div style="margin-left: 20px;margin-right: 20px;margin-top: 10px;margin-bottom: 10px;">
+
+              </div>
+            </div>
+          <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+          </div>
+        </div>
+      </div>
+      <div style="line-height:40px;font-size:40px;">&nbsp;</div>
+    </div></td></tr></tbody></table>
+  </body>
+  </html>
