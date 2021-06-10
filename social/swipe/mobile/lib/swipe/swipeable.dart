@@ -1,196 +1,267 @@
-import 'dart:core';
 import 'package:flutter/material.dart';
 
-import 'swipe.dart';
-
+import 'draggable_card.dart';
+import 'profile_card.dart';
+import 'content/swipeable_content.dart';
 
 class Swipeable extends StatefulWidget {
+  final IndexedWidgetBuilder itemBuilder;
+  final MatchEngine matchEngine;
+  final Function onStackFinished;
 
-  Map<String, dynamic> data;
-  Swipe parent;
-
-  Swipeable({
-    this.data = const {},
-    this.parent = const Swipe(badState: true),
-  });
-
-  Widget generateInteriorContent() => Container(
-    color: Colors.red,
-    child: Text(
-      'Bad State',
-    ),
-  );
+  const Swipeable(
+      {Key? key,
+      required this.matchEngine,
+      required this.onStackFinished,
+      required this.itemBuilder})
+      : super(key: key);
 
   @override
   _SwipeableState createState() => _SwipeableState();
 }
 
 class _SwipeableState extends State<Swipeable> {
-
-    //// data handlers
-  void _accept() {
-    widget.parent.accept(widget.data);
-  }
-  void _deny() {
-    widget.parent.deny(widget.data);
-  }
-
-
-    //// swipe animation
-  int _swipeAnimationDegree = 0;
-  void _setSwipeOffsetValue(int value) {
-    setState(() => _swipeAnimationDegree = value);
-  }
-  void _animateSwipe(int direction) {
-
-    // on finish -> _onSwipeAnimationHasFinished();
-  }
-  void _animateSwipeRight() => _animateSwipe(1);
-  void _animateSwipeLeft() => _animateSwipe(-1);
-
-
-    //// exiting and input choice reporting
-  void _finishSwipeRight() {
-    _accept();
-    _animateSwipeRight();
-  }
-  void _finishSwipeLeft() {
-    _deny();
-    _animateSwipeLeft();
-  }
-
-
-    //// extra information for swipable container
-  bool _isInformationIn = false;
-  void _pullInInformation() {
-    _isInformationIn = true;
-  }
-  void _pullOutInformation() {
-    _isInformationIn = false;
-  }
-  void _togglePullupInformation() {
-    if (_isInformationIn) {
-      _pullOutInformation();
-    }
-    else {
-      _pullInInformation();
-    }
-  }
-
-
-    //// handling input
-  double _startCardDrag = 0, _cardDragDeadzone = 15;
-  double _swipeConfirmDistance = 150, _minimumSwipeableReleaseSpeed = 20;
-  bool _finishedDragAction = false;
-  void _onVerticalDragStart(var details) {
-    _startCardDrag = details.globalPosition.dy;
-    _finishedDragAction = false;
-  }
-  void _onVerticalDragUpdate(var details) {
-    if (_finishedDragAction) return;
-
-    if (details.globalPosition.dy > _startCardDrag + _cardDragDeadzone) { // down
-      _pullInInformation();
-      _finishedDragAction = true;
-    }
-    else if (details.globalPosition.dy < _startCardDrag - _cardDragDeadzone) { // up
-      _pullOutInformation();
-      _finishedDragAction = true;
-    }
-  }
-  void _onHorizontalDragStart(var details) {
-    _startCardDrag = details.globalPosition.dy;
-    _finishedDragAction = false;
-  }
-  void _onHorizontalDragUpdate(var details) {
-    if (_finishedDragAction) return;
-
-      // both right and left
-    if (details.globalPosition.dx > abs(_cardDragDeadzone - _startCardDrag)) {
-      _setSwipeOffsetValue(details.globalPosition.dx - _startCardDrag);
-    }
-  }
-  void _onHorizontalDragEnd(var details) {
-    if (_finishedDragAction) return;
-
-    if (details.primaryVelocity > _minimumSwipeableReleaseSpeed) {
-      if (details.globalPosition.dx > _startCardDrag + _cardDragDeadzone) { // right
-        _finishSwipeRight();
-      }
-    }
-    else if (details.primaryVelocity < _minimumSwipeableReleaseSpeed) {
-      if (details.globalPosition.dx < _startCardDrag - _cardDragDeadzone) { // left
-        _finishSwipeLeft();
-      }
-    }
-  }
-
-
-    //// drawables
-  Widget _buildContentCard() => GestureDetector(
-    onTap: () {
-      print('click');
-    },
-    onDoubleTap: () {
-      _togglePullupInformation();
-    },
-    onVerticalDragStart: (details) {
-      _onVerticalDragStart(details);
-    },
-    onVerticalDragUpdate: (details) {
-      _onVerticalDragUpdate(details);
-    },
-    _onHorizontalDragStart: (details) {
-      _onHorizontalDragStart(details);
-    },
-    _onHorizontalDragUpdate: (details) {
-      _onHorizontalDragUpdate(details);
-    },
-    child: Container(
-      child: widget.generateInteriorContent(),
-    ),
-  );
-
-  Widget _buildAcceptanceButtons() => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    crossAxisAlignment: CrossAxisAlignment.end,
-    children: [
-      GestureDetector(
-        onTap: _finishSwipeLeft,
-        child: CircleAvatar(
-          child: const Icon(Icons.close),
-          backgroundColor: Colors.red,
-          radius: 30,
-        ),
-      ),
-      GestureDetector(
-        onTap: _finishSwipeRight,
-        child: CircleAvatar(
-          child: const Icon(Icons.star_border),
-          backgroundColor: Colors.blue,
-          radius: 20,
-        ),
-      ),
-      GestureDetector(
-        onTap: _finishSwipeRight,
-        child: CircleAvatar(
-          child: const Icon(Icons.check),
-          backgroundColor: Colors.green,
-          radius: 30,
-        ),
-      ),
-    ],
-  );
-
+  Key? _frontCard;
+  SwipeItem? _currentItem;
+  double _nextCardScale = 0.9;
+  SlideRegion slideRegion = SlideRegion.none;
 
   @override
-  Widget build(BuildContext context) => Container(
-    child: Stack(
-      children: [
-        _buildContentCard(),
+  void initState() {
+    widget.matchEngine.addListener(_onMatchEngineChange);
+    _currentItem = widget.matchEngine.currentItem;
+    if (_currentItem != null) {
+      _currentItem!.addListener(_onMatchChange);
+    }
+    _frontCard = Key(widget.matchEngine._currentItemIndex.toString());
+    super.initState();
+  }
 
-        _buildAcceptanceButtons(),
+  @override
+  void dispose() {
+    if (_currentItem != null) {
+      _currentItem!.removeListener(_onMatchChange);
+    }
+    widget.matchEngine.removeListener(_onMatchEngineChange);
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(Swipeable oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.matchEngine != oldWidget.matchEngine) {
+      oldWidget.matchEngine.removeListener(_onMatchEngineChange);
+      widget.matchEngine.addListener(_onMatchEngineChange);
+    }
+    if (_currentItem != null) {
+      _currentItem!.removeListener(_onMatchChange);
+    }
+    _currentItem = widget.matchEngine.currentItem;
+    if (_currentItem != null) {
+      _currentItem!.addListener(_onMatchChange);
+    }
+  }
+
+  void _onMatchEngineChange() {
+    setState(() {
+      if (_currentItem != null) {
+        _currentItem!.removeListener(_onMatchChange);
+      }
+      _currentItem = widget.matchEngine.currentItem!;
+      if (_currentItem != null) {
+        _currentItem!.addListener(_onMatchChange);
+      }
+
+      if (widget.matchEngine._currentItemIndex == null) return;
+      _frontCard = Key(widget.matchEngine._currentItemIndex.toString());
+    });
+  }
+
+  void _onMatchChange() {
+    setState(() {
+      //match has been changed
+    });
+  }
+
+  Widget _buildFrontCard() {
+    return ProfileCard(
+      child: widget.itemBuilder(context, widget.matchEngine._currentItemIndex),
+      key: _frontCard,
+    );
+  }
+
+  Widget _buildBackCard() {
+    return Transform(
+      transform: Matrix4.identity()..scale(_nextCardScale, _nextCardScale),
+      alignment: Alignment.center,
+      child: ProfileCard(
+        child: widget.itemBuilder(context, widget.matchEngine._nextItemIndex),
+      ),
+    );
+  }
+
+  void _onSlideUpdate(double distance) {
+    setState(() {
+      _nextCardScale = 0.9 + (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
+    });
+  }
+
+  void _onSlideRegion(SlideRegion region) {
+    setState(() {
+      slideRegion = region;
+    });
+  }
+
+  void _onSlideOutComplete(SlideDirection direction) {
+    SwipeItem currentMatch = widget.matchEngine.currentItem!;
+    if (currentMatch == null) return;
+
+    switch (direction) {
+      case SlideDirection.left:
+        currentMatch.nope();
+        break;
+      case SlideDirection.right:
+        currentMatch.like();
+        break;
+      case SlideDirection.up:
+        currentMatch.superLike();
+        break;
+    }
+
+    widget.matchEngine.cycleMatch();
+
+    if (widget.matchEngine.currentItem == null) {
+      widget.onStackFinished();
+    }
+  }
+
+  SlideDirection? _desiredSlideOutDirection() {
+    if (widget.matchEngine.currentItem == null) return null;
+
+    switch (widget.matchEngine.currentItem!.decision) {
+      case Decision.nope:
+        return SlideDirection.left;
+      case Decision.like:
+        return SlideDirection.right;
+      case Decision.superLike:
+        return SlideDirection.up;
+      default:
+        return null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        if (widget.matchEngine.nextItem != null)
+          DraggableCard(
+            isDraggable: false,
+            card: _buildBackCard(),
+            onSlideUpdate: (_) {},
+            onSlideRegionUpdate: (_) {},
+            onSlideOutComplete: (_) {},
+          ),
+        if (widget.matchEngine.currentItem != null)
+          DraggableCard(
+            card: _buildFrontCard(),
+            slideTo: _desiredSlideOutDirection(),
+            onSlideUpdate: _onSlideUpdate,
+            onSlideRegionUpdate: _onSlideRegion,
+            onSlideOutComplete: _onSlideOutComplete,
+          ),
       ],
-    ),
-  );
+    );
+  }
 }
+
+class MatchEngine extends ChangeNotifier {
+  final List<SwipeItem> _swipeItems;
+  int _currentItemIndex = 0;
+  int _nextItemIndex = 1;
+
+  MatchEngine({
+    required List<SwipeItem> swipeItems,
+  }) : _swipeItems = swipeItems;
+
+  SwipeItem? get currentItem => _currentItemIndex < _swipeItems.length
+      ? _swipeItems[_currentItemIndex]
+      : null;
+
+  SwipeItem? get nextItem =>
+      _nextItemIndex < _swipeItems.length ? _swipeItems[_nextItemIndex] : null;
+
+  void cycleMatch() {
+    if (currentItem == null) return;
+    if (currentItem!.decision != Decision.undecided) {
+      currentItem!.resetMatch();
+      _currentItemIndex = _nextItemIndex;
+      _nextItemIndex = _nextItemIndex + 1;
+      notifyListeners();
+    }
+  }
+
+  void rewindMatch() {
+    if (_currentItemIndex != 0) {
+      if (currentItem != null) currentItem!.resetMatch();
+      _nextItemIndex = _currentItemIndex;
+      _currentItemIndex = _currentItemIndex - 1;
+      if (currentItem != null) currentItem!.resetMatch();
+      notifyListeners();
+    }
+  }
+}
+
+class SwipeItem extends ChangeNotifier {
+  final dynamic content;
+  final Function(SwipeableContent) likeAction;
+  final Function(SwipeableContent) superlikeAction;
+  final Function(SwipeableContent) nopeAction;
+  Decision decision = Decision.undecided;
+
+  SwipeItem({
+    required this.content,
+    required this.likeAction,
+    required this.superlikeAction,
+    required this.nopeAction,
+  });
+
+  void like() {
+    if (decision == Decision.undecided) {
+      decision = Decision.like;
+      try {
+        likeAction(content);
+      } catch (e) {}
+      notifyListeners();
+    }
+  }
+
+  void nope() {
+    if (decision == Decision.undecided) {
+      decision = Decision.nope;
+      try {
+        nopeAction(content);
+      } catch (e) {}
+      notifyListeners();
+    }
+  }
+
+  void superLike() {
+    if (decision == Decision.undecided) {
+      decision = Decision.superLike;
+      try {
+        superlikeAction(content);
+      } catch (e) {}
+      notifyListeners();
+    }
+  }
+
+  void resetMatch() {
+    if (decision != Decision.undecided) {
+      decision = Decision.undecided;
+      notifyListeners();
+    }
+  }
+}
+
+enum Decision { undecided, nope, like, superLike }

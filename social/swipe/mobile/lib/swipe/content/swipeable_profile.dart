@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../swipeable.dart';
+import 'swipeable_content.dart';
 
-class SwipeableProfile extends Swipeable {
 
-  SwipeableProfile({
-    this.data = const {},
-    this.parent = const Swipe(badState: true),
-  });
-
-  @override
-  Widget generateInteriorContent() => Container(
-    color: data['colors'],
-    child: Text('PROFILE'),
-  );
+class ContentProfile extends SwipeableContent {
+  ContentProfile(Map<String, dynamic> input)
+    : super(
+      text: input['text'],
+      color: input['color']
+    )
+  { }
 }

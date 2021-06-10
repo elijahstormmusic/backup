@@ -112,13 +112,13 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
 
     return AppBar(
-      leading: FadeIn(
-        controller: _loadingController,
-        offset: .3,
-        curve: headerAniInterval,
-        fadeDirection: FadeDirection.startToEnd,
-        child: menuBtn,
-      ),
+      // leading: FadeIn(
+      //   controller: _loadingController,
+      //   offset: .3,
+      //   curve: headerAniInterval,
+      //   fadeDirection: FadeDirection.startToEnd,
+      //   child: menuBtn,
+      // ),
       // actions: <Widget>[
       //   FadeIn(
       //     controller: _loadingController,
@@ -299,18 +299,13 @@ class _DashboardScreenState extends State<DashboardScreen>
       onWillPop: () => _gotoLogin(context),
       child: SafeArea(
         child: Scaffold(
-          appBar: _buildAppBar(theme),
-          drawer: SlideMenu(),
+          // appBar: _buildAppBar(theme),
+          // drawer: SlideMenu(),
           body: Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: theme.primaryColor.withOpacity(.1),
             child: Stack(
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    SizedBox(height: 40),
-
                     Expanded(
                       flex: 8,
                       child: ShaderMask(
@@ -335,7 +330,6 @@ class _DashboardScreenState extends State<DashboardScreen>
                     ),
                   ],
                 ),
-                if (!kReleaseMode) _buildDebugButtons(),
               ],
             ),
           ),

@@ -21,17 +21,20 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    bool account_logged_in = false;
+    dynamic launchState = LoginScreen();
+    String _initialRoute = LoginScreen.routeName;
 
     if (UserState.User != '') {
-      account_logged_in = true;
+      launchState = DashboardScreen();
+      _initialRoute = DashboardScreen.routeName;
     }
 
     if (
       !kReleaseMode &&
       AppDebugLogin.bypass
     ) {
-      account_logged_in = true;
+      launchState = DashboardScreen();
+      _initialRoute = DashboardScreen.routeName;
 
       UserState.User = AppDebugLogin.username;
       UserState.Auth = AppDebugLogin.password;
@@ -44,7 +47,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.deepPurple,
         accentColor: Colors.orange,
         textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.orange),
-        // fontFamily: 'SourceSansPro',
+        fontFamily: 'SourceSansPro',
         textTheme: TextTheme(
           headline3: TextStyle(
             fontFamily: 'OpenSans',
@@ -74,11 +77,9 @@ class MyApp extends StatelessWidget {
           overline: TextStyle(fontFamily: 'NotoSans'),
         ),
       ),
-      home: account_logged_in
-        ? DashboardScreen()
-        : LoginScreen(),
       navigatorObservers: [TransitionRouteObserver()],
-      initialRoute: LoginScreen.routeName,
+      initialRoute: _initialRoute,
+      home: launchState,
       routes: {
         LoginScreen.routeName: (context) => LoginScreen(),
         DashboardScreen.routeName: (context) => DashboardScreen(),

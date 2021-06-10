@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../swipeable.dart';
+import 'swipeable_content.dart';
 
-class SwipeableAd extends Swipeable {
 
-  SwipeableAd({
-    this.data = const {},
-    this.parent = const Swipe(badState: true),
-  });
+class ContentAd extends SwipeableContent {
+  ContentAd(Map<String, dynamic> input)
+    : super(
+      text: input['text'],
+      color: input['color']
+    )
+  {
 
-  @override
-  Widget generateInteriorContent() => Container(
-    color: data['colors'],
-    child: Text('ADVERTISEMENT'),
-  );
+  }
 }

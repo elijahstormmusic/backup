@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 
 import 'swipeable.dart';
+import 'content/swipeable_content.dart';
 import 'content/swipeable_profile.dart';
 import 'content/swipeable_ad.dart';
 
-enum Content {
+enum CONTENT {
   NONE,
   PROFILE,
   AD,
+}
+enum SWIPES {
+  NONE,
+  ACCEPT,
+  DENY,
+  LOVE,
 }
 
 class Swipe extends StatefulWidget {
@@ -18,24 +25,14 @@ class Swipe extends StatefulWidget {
     this.badState = false,
   });
 
-
-  void accept(Map<String, dynamic> data) {
-    if (badState) return;
-
-  }
-  void deny(Map<String, dynamic> data) {
-    if (badState) return;
-
-  }
-
-
   @override
   _SwipeState createState() => _SwipeState();
 }
 
 class _SwipeState extends State<Swipe> {
 
-  List<Map<String, dynamic> > content_list = [];
+  List<SwipeableContent> content_list = [];
+  MatchEngine _matchEngine = MatchEngine(swipeItems: []);
 
   @override
   void initState() {
@@ -44,10 +41,38 @@ class _SwipeState extends State<Swipe> {
   }
 
 
+  void _swipeInput(SwipeableContent content, SWIPES type) {
+
+    print('onSwipe _swipeInput');
+
+    if (widget.badState) return;
+
+    _openNextInList();
+  }
+
+  void _likeAction(SwipeableContent content) {
+    _swipeInput(content, SWIPES.ACCEPT);
+  }
+  void _nopeAction(SwipeableContent content) {
+    _swipeInput(content, SWIPES.DENY);
+  }
+  void _superlikeAction(SwipeableContent content) {
+    _swipeInput(content, SWIPES.LOVE);
+  }
+
+
   bool _allowRequest = true, _requestFailed = false;
   final REQUEST_AMOUNT = 10, CONTENT_MINIMUM = 5;
   bool kill_reflow = false;
 
+  void _openNextInList() {
+
+    if (content_list.length < CONTENT_MINIMUM) {
+      _requestMoreContent(REQUEST_AMOUNT);
+    }
+
+    // setState(() => content_list.removeAt(0));
+  }
   void _requestMoreContent(int amount) {
     if (!_allowRequest) return;
 
@@ -61,57 +86,45 @@ class _SwipeState extends State<Swipe> {
 
     response([
       {
-        'type': Content.PROFILE,
+        'type': CONTENT.PROFILE,
         'profile_id': 'profileId-grey',
         'pic': 'something.jpg',
-        'color': Colors.grey,
+        'text': 'Suzi',
+        'color': Colors.pink,
       },
       {
-        'type': Content.PROFILE,
+        'type': CONTENT.PROFILE,
         'profile_id': 'profileId-purple',
         'pic': 'something.jpg',
+        'text': 'Dog',
         'color': Colors.purple,
       },
       {
-        'type': Content.PROFILE,
+        'type': CONTENT.PROFILE,
         'profile_id': 'profileId-white',
         'pic': 'something.jpg',
-        'color': Colors.white,
-      },
-      {
-        'type': Content.PROFILE,
-        'profile_id': 'profileId-black',
-        'pic': 'something.jpg',
+        'text': 'Elijah',
         'color': Colors.black,
       },
       {
-        'type': Content.PROFILE,
-        'profile_id': 'profileId-brown',
+        'type': CONTENT.PROFILE,
+        'profile_id': 'profileId-grey',
         'pic': 'something.jpg',
+        'text': 'Josh',
         'color': Colors.brown,
       },
       {
-        'type': Content.PROFILE,
+        'type': CONTENT.PROFILE,
+        'profile_id': 'profileId-purple',
+        'pic': 'something.jpg',
+        'text': 'Jessica',
+        'color': Colors.purple,
+      },
+      {
+        'type': CONTENT.PROFILE,
         'profile_id': 'profileId-white',
         'pic': 'something.jpg',
-        'color': Colors.white,
-      },
-      {
-        'type': Content.PROFILE,
-        'profile_id': 'profileId-brown',
-        'pic': 'something.jpg',
-        'color': Colors.brown,
-      },
-      {
-        'type': Content.PROFILE,
-        'profile_id': 'profileId-black',
-        'pic': 'something.jpg',
-        'color': Colors.black,
-      },
-      {
-        'type': Content.PROFILE,
-        'profile_id': 'profileId-pink',
-        'pic': 'something.jpg',
+        'text': 'Sky',
         'color': Colors.pink,
       },
     ]);
@@ -162,50 +175,53 @@ class _SwipeState extends State<Swipe> {
       return;
     }
 
-    List<Map<String, dynamic> > list = [];
+    List<SwipeableContent> list = [];
     var result;
 
-    try {
-      for (var i=0;i<data.length;i++) {
-        if (data[i]['type']==Content.PROFILE) {
-          result = data[i];
-
-          try {
-            // result['profile'] = Profile.json(data[i]);
-          } catch (e) {
-            print(
-              '''
-              -------------
-                    Swipe Profile Parsing Error - lib/swipe/swipe.dart -> response()
-                ${e}
-              -------------
-              '''
-            );
-          }
+    for (var i=0;i<data.length;i++) {
+      try {
+        if (data[i]['type']==CONTENT.PROFILE) {
+          result = ContentProfile(data[i]);
+        }
+        else if (data[i]['type']==CONTENT.AD) {
+          result = ContentAd(data[i]);
         }
         else continue;
 
         list.add(result);
-      }
-    }
-    catch (e) {
-      _requestFailed = true;
 
-      print(
-        '''
-        -------------
-              Swipe Content Parsing Error - lib/swipe/swipe.dart -> response()
-          ${e}
-        -------------
-        '''
-      );
-      return;
+      } catch (e) {
+        print(
+          '''
+          -------------
+                Swipe Profile Parsing Error - lib/swipe/swipe.dart -> response()
+          With Data:
+            ${data[i]}
+          With Error:
+            ${e}
+          -------------
+          '''
+        );
+      }
     }
 
     _requestFailed = false;
     if (kill_reflow) return;
 
-    setState(() => content_list += list);
+    content_list += list;
+
+    List<SwipeItem> _swipeItems = [];
+
+    for (int i=0;i<content_list.length;i++) {
+      _swipeItems.add(SwipeItem(
+        content: content_list[i],
+        likeAction: _likeAction,
+        nopeAction: _nopeAction,
+        superlikeAction: _superlikeAction,
+      ));
+    }
+
+    setState(() => _matchEngine = MatchEngine(swipeItems: _swipeItems));
 
     await Future.delayed(const Duration(seconds: 1));
 
@@ -229,26 +245,62 @@ class _SwipeState extends State<Swipe> {
       )
     );
 
-  Widget _buildContentCard(Map<String, dynamic> data) {
-    var buildType = SwipeableProfile(
-      data: data,
-      parent: this,
-    );
-
-    if (data['type'] == Content.AD) {
-      buildType = SwipeableAd(
-        data: data,
-        parent: this,
-      );
-    }
-
-    return buildType;
-  }
 
   @override
   Widget build(BuildContext context) => Container(
-    child: _buildContentCard(
-      content_list.first,
+    child: Container(
+      child: Column(
+        children: [
+          Container(
+            height: 550,
+            child: Swipeable(
+              matchEngine: _matchEngine,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  alignment: Alignment.center,
+                  color: content_list[index].color, // TODO: DESIGN
+                  child: Text(
+                    content_list[index].text,
+                    style: TextStyle(fontSize: 100),
+                  ),
+                );
+              },
+              onStackFinished: () {
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text("Stack Finished"),
+                  duration: Duration(milliseconds: 500),
+                ));
+              },
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              RaisedButton(
+                onPressed: () {
+                  if (_matchEngine.currentItem == null) return;
+
+                  _matchEngine.currentItem!.nope();
+                },
+                child: Text("Nope")),
+              RaisedButton(
+                onPressed: () {
+                  if (_matchEngine.currentItem == null) return;
+
+                  _matchEngine.currentItem!.superLike();
+                },
+                child: Text("Superlike")),
+              RaisedButton(
+                onPressed: () {
+                  if (_matchEngine.currentItem == null) return;
+
+                  _matchEngine.currentItem!.like();
+                },
+                child: Text("Like"))
+            ],
+          ),
+        ],
+      ),
     ),
   );
 }
