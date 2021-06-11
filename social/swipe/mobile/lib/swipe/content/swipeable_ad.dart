@@ -7,9 +7,12 @@ class ContentAd extends SwipeableContent {
   ContentAd(Map<String, dynamic> input)
     : super(
       text: input['text'],
-      color: input['color']
+      caption: input['caption'],
+      pictures: input['pictures'],
+      sex: input['sex'],
+      online: input['online'],
+      verified: input['verified'],
+      id: input['id'],
     )
-  {
-
-  }
+  { }
 }

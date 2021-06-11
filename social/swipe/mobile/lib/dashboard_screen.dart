@@ -291,6 +291,32 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  int _selectedIndex = 0;
+  void _selectedTab(int index) {
+    if (_selectedIndex == index) {
+      // Arrival.navigator.currentState.popUntil((route) => route.isFirst);
+      if (_selectedIndex == 0) {
+        // ArticleFeed.scrollToTop();
+      }
+      else if (_selectedIndex == 1) {
+        // PostFeed.scrollToTop();
+      }
+      else if (_selectedIndex == 2) {
+        // ForYouPage.scrollToTop();
+      }
+      else if (_selectedIndex == 3) {
+        // PartnerFeed.scrollToTop();
+      }
+      else if (_selectedIndex == 4) {
+        // Maps.scrollToTop();
+      }
+      else {
+        // ForYouPage.scrollToTop();
+      }
+    }
+    setState(() => _selectedIndex = index);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -301,6 +327,38 @@ class _DashboardScreenState extends State<DashboardScreen>
         child: Scaffold(
           // appBar: _buildAppBar(theme),
           // drawer: SlideMenu(),
+          bottomNavigationBar: BottomNavigationBar(
+            onTap: _selectedTab,
+            type: BottomNavigationBarType.fixed,
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.supervisor_account),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.map),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.chat),
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            // backgroundColor: Colors.white,
+            // selectedIconTheme: IconThemeData(
+            //   color: Styles.ArrivalPalletteRed,
+            //   size: 24.0,
+            // ),
+            // unselectedIconTheme: IconThemeData(
+            //   color: Styles.ArrivalPalletteBlack,
+            //   size: 24.0,
+            // ),
+            selectedFontSize: 16.0,
+            unselectedFontSize: 16.0,
+            // selectedItemColor: Styles.ArrivalPalletteRed,
+            // unselectedItemColor: Styles.ArrivalPalletteBlack,
+          ),
           body: Container(
             child: Stack(
               children: <Widget>[

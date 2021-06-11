@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'swipeable.dart';
+// import 'image_carousel.dart';
 import 'content/swipeable_content.dart';
 import 'content/swipeable_profile.dart';
 import 'content/swipeable_ad.dart';
+import 'content/mock_content.dart';
 
 enum CONTENT {
   NONE,
@@ -32,6 +34,7 @@ class Swipe extends StatefulWidget {
 class _SwipeState extends State<Swipe> {
 
   List<SwipeableContent> content_list = [];
+  int _swiped_amount = 0;
   MatchEngine _matchEngine = MatchEngine(swipeItems: []);
 
   @override
@@ -66,12 +69,9 @@ class _SwipeState extends State<Swipe> {
   bool kill_reflow = false;
 
   void _openNextInList() {
-
-    if (content_list.length < CONTENT_MINIMUM) {
+    if (_swiped_amount++ < CONTENT_MINIMUM) {
       _requestMoreContent(REQUEST_AMOUNT);
     }
-
-    // setState(() => content_list.removeAt(0));
   }
   void _requestMoreContent(int amount) {
     if (!_allowRequest) return;
@@ -84,50 +84,7 @@ class _SwipeState extends State<Swipe> {
 
     _checkForFailure();
 
-    response([
-      {
-        'type': CONTENT.PROFILE,
-        'profile_id': 'profileId-grey',
-        'pic': 'something.jpg',
-        'text': 'Suzi',
-        'color': Colors.pink,
-      },
-      {
-        'type': CONTENT.PROFILE,
-        'profile_id': 'profileId-purple',
-        'pic': 'something.jpg',
-        'text': 'Dog',
-        'color': Colors.purple,
-      },
-      {
-        'type': CONTENT.PROFILE,
-        'profile_id': 'profileId-white',
-        'pic': 'something.jpg',
-        'text': 'Elijah',
-        'color': Colors.black,
-      },
-      {
-        'type': CONTENT.PROFILE,
-        'profile_id': 'profileId-grey',
-        'pic': 'something.jpg',
-        'text': 'Josh',
-        'color': Colors.brown,
-      },
-      {
-        'type': CONTENT.PROFILE,
-        'profile_id': 'profileId-purple',
-        'pic': 'something.jpg',
-        'text': 'Jessica',
-        'color': Colors.purple,
-      },
-      {
-        'type': CONTENT.PROFILE,
-        'profile_id': 'profileId-white',
-        'pic': 'something.jpg',
-        'text': 'Sky',
-        'color': Colors.pink,
-      },
-    ]);
+    response(MockContent.all);
   }
 
   bool _responseHeard = false, _forceFailCurrentState = false;
@@ -252,18 +209,11 @@ class _SwipeState extends State<Swipe> {
       child: Column(
         children: [
           Container(
-            height: 550,
+            height: MediaQuery.of(context).size.height,
             child: Swipeable(
               matchEngine: _matchEngine,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  alignment: Alignment.center,
-                  color: content_list[index].color, // TODO: DESIGN
-                  child: Text(
-                    content_list[index].text,
-                    style: TextStyle(fontSize: 100),
-                  ),
-                );
+                return content_list[index].generate(context);
               },
               onStackFinished: () {
                 Scaffold.of(context).showSnackBar(SnackBar(

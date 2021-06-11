@@ -52,6 +52,30 @@ dev_dependencies:
 flutter:
   assets:
     - assets/
+    - assets/demo/dorothy/1.jpeg
+    - assets/demo/donghee/1.jpg
+    - assets/demo/donghee/2.jpg
+    - assets/demo/donghee/3.jpg
+    - assets/demo/jackblack/1.png
+    - assets/demo/jackblack/2.jpg
+    - assets/demo/jackblack/3.jpg
+    - assets/demo/jackblack/4.jpg
+    - assets/demo/iu/1.jpg
+    - assets/demo/iu/2.jpg
+    - assets/demo/iu/3.jpg
+    - assets/demo/iu/4.jpg
+    - assets/demo/iu/5.jpg
+    - assets/demo/jennie/1.jpg
+    - assets/demo/jennie/2.jpg
+    - assets/demo/jennie/3.png
+    - assets/demo/jennie/4.jpg
+    - assets/demo/paige/1.jpg
+    - assets/demo/snoop/1.png
+    - assets/demo/snoop/2.jpg
+    - assets/demo/snoop/3.jpg
+    - assets/demo/tigerwoods/1.jpg
+    - assets/demo/tigerwoods/2.jpg
+    - assets/demo/tigerwoods/3.jpg
     - pubspec.lock
   uses-material-design: true
 
