@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_login/theme.dart';
 import 'package:flutter_login/widgets.dart';
@@ -9,8 +10,14 @@ import 'login/constants.dart';
 import 'widgets/animated_numeric_text.dart';
 import 'widgets/fade_in.dart';
 import 'widgets/round_button.dart';
-import 'widgets/slide_menu.dart';
+// import 'widgets/slide_menu.dart';
+
+import 'loader/loader.dart';
 import 'swipe/swipe.dart';
+// import 'maps/maps.dart';
+// import 'chat/chat.dart';
+// import 'explore/explore.dart';
+
 
 class DashboardScreen extends StatefulWidget {
   static const routeName = '/dashboard';
@@ -24,13 +31,8 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   Future<bool> _gotoLogin(BuildContext context) {
     return Navigator.of(context)
-        .pushReplacementNamed('/')
+        .pushReplacementNamed('/auth')
         // we dont want to pop the screen, just replace it completely
-        .then((_) => false);
-  }
-  Future<bool> _gotoChat(BuildContext context) {
-    return Navigator.of(context)
-        .pushReplacementNamed('/chat')
         .then((_) => false);
   }
 
@@ -38,6 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   static const headerAniInterval = Interval(.1, .3, curve: Curves.easeOut);
   late Animation<double> _headerScaleAnimation;
   AnimationController? _loadingController;
+  bool _onload = false;
 
   @override
   void initState() {
@@ -53,6 +56,10 @@ class _DashboardScreenState extends State<DashboardScreen>
       parent: _loadingController!,
       curve: headerAniInterval,
     ));
+
+    SchedulerBinding.instance!.addPostFrameCallback((_) {
+      _fadeIn();
+    });
   }
 
   @override
@@ -80,11 +87,11 @@ class _DashboardScreenState extends State<DashboardScreen>
 
       },
     );
-    final signOutBtn = IconButton(
-      icon: const Icon(FontAwesomeIcons.golfBall),//signOutAlt
-      color: theme.accentColor,
-      onPressed: () => _gotoChat(context),
-    );
+    // final signOutBtn = IconButton(
+    //   icon: const Icon(FontAwesomeIcons.golfBall),//signOutAlt
+    //   color: theme.accentColor,
+    //   onPressed: () => _gotoChat(context),
+    // );
     final title = Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -316,6 +323,43 @@ class _DashboardScreenState extends State<DashboardScreen>
     }
     setState(() => _selectedIndex = index);
   }
+  Widget _decideInteriorBody() {
+    var choice;
+
+    switch (_selectedIndex) {
+      case 0:
+        choice = Swipe();
+        break;
+      case 1:
+        // choice = Explore();
+        break;
+      case 2:
+        // choice = Maps();
+        break;
+      case 3:
+        // choice = Chat();
+        break;
+      default:
+        choice = Swipe();
+        break;
+    }
+
+    return Stack(
+      children: [
+        LoaderAnimation(),
+
+        AnimatedOpacity(
+          duration: Duration(milliseconds: 500),
+          opacity: _onload ? 1.0 : 0.0,
+          child: choice,
+        ),
+      ],
+    );
+  }
+  void _fadeIn() async {
+    await Future.();
+    setState(() => _onload = true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -329,68 +373,42 @@ class _DashboardScreenState extends State<DashboardScreen>
           // drawer: SlideMenu(),
           bottomNavigationBar: BottomNavigationBar(
             onTap: _selectedTab,
+            enableFeedback: true,
             type: BottomNavigationBarType.fixed,
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.supervisor_account),
+                label: '',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
+                label: '',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.map),
+                label: '',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.chat),
+                label: '',
               ),
             ],
             currentIndex: _selectedIndex,
-            // backgroundColor: Colors.white,
-            // selectedIconTheme: IconThemeData(
-            //   color: Styles.ArrivalPalletteRed,
-            //   size: 24.0,
-            // ),
-            // unselectedIconTheme: IconThemeData(
-            //   color: Styles.ArrivalPalletteBlack,
-            //   size: 24.0,
-            // ),
+            backgroundColor: Colors.white,
+            selectedIconTheme: IconThemeData(
+              color: Colors.red,
+              size: 24.0,
+            ),
+            unselectedIconTheme: IconThemeData(
+              size: 24.0,
+            ),
+            // selectedItemColor: Styles.ArrivalPalletteRed,
             selectedFontSize: 16.0,
             unselectedFontSize: 16.0,
-            // selectedItemColor: Styles.ArrivalPalletteRed,
-            // unselectedItemColor: Styles.ArrivalPalletteBlack,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
           ),
-          body: Container(
-            child: Stack(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 8,
-                      child: ShaderMask(
-                        // blendMode: BlendMode.srcOver,
-                        shaderCallback: (Rect bounds) {
-                          return LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            tileMode: TileMode.clamp,
-                            colors: <Color>[
-                              Colors.deepPurpleAccent.shade100,
-                              Colors.deepPurple.shade100,
-                              Colors.deepPurple.shade100,
-                              Colors.deepPurple.shade100,
-                              // Colors.red,
-                              // Colors.yellow,
-                            ],
-                          ).createShader(bounds);
-                        },
-                        child: Swipe(),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          body: _decideInteriorBody(),
         ),
       ),
     );

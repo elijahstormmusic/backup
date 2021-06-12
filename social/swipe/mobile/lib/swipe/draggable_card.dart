@@ -301,7 +301,6 @@ class _DraggableCardState extends State<DraggableCard>
         key: profileCardKey,
         width: anchorBounds.width,
         height: anchorBounds.height,
-        padding: const EdgeInsets.all(16.0),
         child: GestureDetector(
           onPanStart: _onPanStart,
           onPanUpdate: _onPanUpdate,

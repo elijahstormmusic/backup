@@ -83,7 +83,6 @@ class MyApp extends StatelessWidget {
       routes: {
         LoginScreen.routeName: (context) => LoginScreen(),
         DashboardScreen.routeName: (context) => DashboardScreen(),
-        // Maps.routeName: (context) => Maps(),
       },
     );
   }

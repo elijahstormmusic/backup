@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:badges/badges.dart';
 
 import 'swipeable.dart';
 // import 'image_carousel.dart';
@@ -205,52 +207,247 @@ class _SwipeState extends State<Swipe> {
 
   @override
   Widget build(BuildContext context) => Container(
-    child: Container(
-      child: Column(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height,
-            child: Swipeable(
-              matchEngine: _matchEngine,
-              itemBuilder: (BuildContext context, int index) {
-                return content_list[index].generate(context);
-              },
-              onStackFinished: () {
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text("Stack Finished"),
-                  duration: Duration(milliseconds: 500),
-                ));
-              },
-            ),
+    padding: EdgeInsets.all(1.0),
+    child: Column(
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height - 60,
+          child: Swipeable(
+            matchEngine: _matchEngine,
+            itemBuilder: (BuildContext context, int index) {
+              return Card(
+                elevation: 6,
+                // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                child: Container(
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        child: content_list[index].images,
+                      ),
+
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            gradient: LinearGradient(
+                              begin: FractionalOffset.topCenter,
+                              end: FractionalOffset.bottomCenter,
+                              colors: [
+                                Colors.grey.withOpacity(0.0),
+                                Colors.black.withOpacity(0.4),
+                                Colors.black.withOpacity(0.7),
+                              ],
+                              stops: [
+                                0.5,
+                                0.7,
+                                1.0,
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      Positioned(
+                        bottom: 20.0,
+                        left: 30.0,
+                        right: 30.0,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    content_list[index].online
+                                      ? Container(
+                                        padding: EdgeInsets.only(
+                                          right: 4.0,
+                                        ),
+                                        child: BlinkingActiveCircle(),
+                                      )
+                                      : Container(width: 0),
+
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            content_list[index].text,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+
+                                          content_list[index].verified
+                                          ? Container(
+                                            padding: EdgeInsets.only(
+                                              left: 4.0,
+                                            ),
+                                            child: Badge(
+                                              shape: BadgeShape.circle,
+                                              badgeColor: Colors.deepPurple,
+                                              animationType: BadgeAnimationType.slide,
+                                              badgeContent: Text(
+                                                'S',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                          : Container(width: 0),
+                                        ],
+                                      ),
+                                  ],
+                                ),
+
+                                SizedBox(width: 12.0),
+
+                                Text(
+                                  '${content_list[index].sex[0].toUpperCase()}${content_list[index].sex.substring(1)}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            SizedBox(height: 4.0),
+
+                            Text(
+                              content_list[index].caption,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            SizedBox(height: 12.0),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    if (_matchEngine.currentItem == null) return;
+
+                                    _matchEngine.currentItem!.nope();
+                                  },
+                                  child: CircleAvatar(
+                                    radius: 25.0,
+                                    backgroundColor: Colors.red,
+                                    child: Center(
+                                      child: const Icon(
+                                        FontAwesomeIcons.times,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (_matchEngine.currentItem == null) return;
+
+                                    _matchEngine.currentItem!.superLike();
+                                  },
+                                  child: CircleAvatar(
+                                    radius: 20.0,
+                                    backgroundColor: Colors.blue,
+                                    child: Center(
+                                      child: const Icon(
+                                        FontAwesomeIcons.star,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (_matchEngine.currentItem == null) return;
+
+                                    _matchEngine.currentItem!.like();
+                                  },
+                                  child: CircleAvatar(
+                                    radius: 25.0,
+                                    backgroundColor: Colors.green,
+                                    child: Center(
+                                      child: const Icon(
+                                        FontAwesomeIcons.check,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+            onStackFinished: () {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text("Stack Finished"),
+                duration: Duration(milliseconds: 500),
+              ));
+            },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              RaisedButton(
-                onPressed: () {
-                  if (_matchEngine.currentItem == null) return;
-
-                  _matchEngine.currentItem!.nope();
-                },
-                child: Text("Nope")),
-              RaisedButton(
-                onPressed: () {
-                  if (_matchEngine.currentItem == null) return;
-
-                  _matchEngine.currentItem!.superLike();
-                },
-                child: Text("Superlike")),
-              RaisedButton(
-                onPressed: () {
-                  if (_matchEngine.currentItem == null) return;
-
-                  _matchEngine.currentItem!.like();
-                },
-                child: Text("Like"))
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     ),
   );
+}
+
+class BlinkingActiveCircle extends StatefulWidget {
+  @override
+  _BlinkingActiveCircleState createState() => _BlinkingActiveCircleState();
+}
+
+class _BlinkingActiveCircleState extends State<BlinkingActiveCircle>
+    with SingleTickerProviderStateMixin {
+  AnimationController? _animationController;
+
+  @override
+  void initState() {
+    _animationController =
+        new AnimationController(vsync: this, duration: Duration(seconds: 1));
+    _animationController!.repeat(reverse: true);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController!.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _animationController!,
+      child: CircleAvatar(
+        radius: 4.0,
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
 }

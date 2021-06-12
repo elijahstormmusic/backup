@@ -96,7 +96,6 @@ class _SwipeableState extends State<Swipeable> {
       alignment: Alignment.center,
       child: ProfileCard(
         child: widget.itemBuilder(context, widget.matchEngine._nextItemIndex),
-        elevation: 0,
       ),
     );
   }

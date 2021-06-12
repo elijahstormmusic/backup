@@ -40,39 +40,10 @@ class SwipeableContent {
         return Container(
           child: Image.asset(
             list[i],
+            fit: BoxFit.fill,
           ),
         );
       },
     );
   }
-
-  Widget generate(BuildContext context) => Container(
-    child: Stack(
-      children: [
-        Positioned(
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
-          child: images,
-        ),
-
-        Positioned(
-          bottom: 8.0,
-          left: 8.0,
-          child: Text(
-            caption,
-          ),
-        ),
-
-        Positioned(
-          bottom: 26.0,
-          left: 8.0,
-          child: Text(
-            text,
-          ),
-        ),
-      ],
-    ),
-  );
 }
