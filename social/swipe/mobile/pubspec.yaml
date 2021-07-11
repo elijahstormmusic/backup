@@ -49,37 +49,63 @@ dev_dependencies:
     sdk: flutter
   pedantic: ^1.11.0
   flutter_launcher_icons: ^0.9.0
+  # flutter_native_splash: ^1.2.0
   test: ^1.16.8
 
 flutter:
   assets:
     - assets/
-    - assets/demo/dorothy/1.jpeg
-    - assets/demo/donghee/1.jpg
-    - assets/demo/donghee/2.jpg
-    - assets/demo/donghee/3.jpg
-    - assets/demo/jackblack/1.png
-    - assets/demo/jackblack/2.jpg
-    - assets/demo/jackblack/3.jpg
-    - assets/demo/jackblack/4.jpg
-    - assets/demo/iu/1.jpg
-    - assets/demo/iu/2.jpg
-    - assets/demo/iu/3.jpg
-    - assets/demo/iu/4.jpg
-    - assets/demo/iu/5.jpg
-    - assets/demo/jennie/1.jpg
-    - assets/demo/jennie/2.jpg
-    - assets/demo/jennie/3.png
-    - assets/demo/jennie/4.jpg
-    - assets/demo/paige/1.jpg
-    - assets/demo/snoop/1.png
-    - assets/demo/snoop/2.jpg
-    - assets/demo/snoop/3.jpg
-    - assets/demo/tigerwoods/1.jpg
-    - assets/demo/tigerwoods/2.jpg
-    - assets/demo/tigerwoods/3.jpg
+    - assets/images/special_background.jpg
+    - assets/loading/explore_card.jpg
+
+
+    - assets/demo/people/dorothy/1.jpeg
+    - assets/demo/people/donghee/1.jpg
+    - assets/demo/people/donghee/2.jpg
+    - assets/demo/people/donghee/3.jpg
+    - assets/demo/people/jackblack/1.png
+    - assets/demo/people/jackblack/2.jpg
+    - assets/demo/people/jackblack/3.jpg
+    - assets/demo/people/jackblack/4.jpg
+    - assets/demo/people/iu/1.jpg
+    - assets/demo/people/iu/2.jpg
+    - assets/demo/people/iu/3.jpg
+    - assets/demo/people/iu/4.jpg
+    - assets/demo/people/iu/5.jpg
+    - assets/demo/people/jennie/1.jpg
+    - assets/demo/people/jennie/2.jpg
+    - assets/demo/people/jennie/3.png
+    - assets/demo/people/jennie/4.jpg
+    - assets/demo/people/paige/1.jpg
+    - assets/demo/people/snoop/1.png
+    - assets/demo/people/snoop/2.jpg
+    - assets/demo/people/snoop/3.jpg
+    - assets/demo/people/tigerwoods/1.jpg
+    - assets/demo/people/tigerwoods/2.jpg
+    - assets/demo/people/tigerwoods/3.jpg
+
+    - assets/demo/partners/greatplace/golf1.jpg
+    - assets/demo/partners/greatplace/golf2.jpg
+    - assets/demo/partners/greatplace/golf3.png
+    - assets/demo/partners/okayplace/golf1.jpg
+    - assets/demo/partners/okayplace/golf2.jpg
+    - assets/demo/partners/okayplace/golf3.jpg
+    - assets/demo/partners/badplace/golf1.jpg
+    - assets/demo/partners/badplace/golf2.jpg
+    - assets/demo/partners/badplace/golf3.jpg
+    - assets/demo/partners/dontcome/golf1.jpg
+    - assets/demo/partners/dontcome/golf2.jpg
+    - assets/demo/partners/dontcome/golf3.jpg
+
+    - assets/demo/maps/map.jpg
+
     - pubspec.lock
+
   uses-material-design: true
+
+flutter_native_splash:
+  color: "#42a5f5"
+  image: "assets/splash.png"
 
 flutter_icons:
   android: true

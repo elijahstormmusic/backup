@@ -4,13 +4,14 @@ import '../../const.dart';
 
 
 class SwipeableContent {
+
   final String text;
   final String caption;
   final List<String> pictures;
   final String sex;
   final bool online;
   final bool verified;
-  final String id;
+  final String cryptlink;
 
   SwipeableContent({
     required this.text,
@@ -19,7 +20,7 @@ class SwipeableContent {
     required this.sex,
     required this.online,
     required this.verified,
-    required this.id,
+    required this.cryptlink,
   });
 
   void action() {
@@ -46,4 +47,11 @@ class SwipeableContent {
       },
     );
   }
+
+  Widget get icon => Container(
+    child: Image.asset(
+      Constants.demo_source + pictures[0],
+      fit: BoxFit.fill,
+    ),
+  );
 }

@@ -47,9 +47,6 @@ class _SwipeState extends State<Swipe> {
 
 
   void _swipeInput(SwipeableContent content, SWIPES type) {
-
-    print('onSwipe _swipeInput');
-
     if (widget.badState) return;
 
     _openNextInList();
@@ -67,7 +64,7 @@ class _SwipeState extends State<Swipe> {
 
 
   bool _allowRequest = true, _requestFailed = false;
-  final REQUEST_AMOUNT = 10, CONTENT_MINIMUM = 5;
+  final REQUEST_AMOUNT = 20, CONTENT_MINIMUM = 10;
   bool kill_reflow = false;
 
   void _openNextInList() {
@@ -180,7 +177,7 @@ class _SwipeState extends State<Swipe> {
       ));
     }
 
-    setState(() => _matchEngine = MatchEngine(swipeItems: _swipeItems));
+    setState(() => _matchEngine.add(_swipeItems));
 
     await Future.delayed(const Duration(seconds: 1));
 
@@ -208,7 +205,7 @@ class _SwipeState extends State<Swipe> {
   @override
   Widget build(BuildContext context) => Container(
     padding: EdgeInsets.all(1.0),
-    child: Column(
+    child: Stack(
       children: [
         Container(
           height: MediaQuery.of(context).size.height - 60,
@@ -242,7 +239,7 @@ class _SwipeState extends State<Swipe> {
                               end: FractionalOffset.bottomCenter,
                               colors: [
                                 Colors.grey.withOpacity(0.0),
-                                Colors.black.withOpacity(0.4),
+                                Colors.black.withOpacity(0.5),
                                 Colors.black.withOpacity(0.7),
                               ],
                               stops: [
@@ -256,7 +253,7 @@ class _SwipeState extends State<Swipe> {
                       ),
 
                       Positioned(
-                        bottom: 20.0,
+                        bottom: 84.0,
                         left: 30.0,
                         right: 30.0,
                         child: Column(
@@ -326,7 +323,7 @@ class _SwipeState extends State<Swipe> {
                               ],
                             ),
 
-                            SizedBox(height: 4.0),
+                            SizedBox(height: 8.0),
 
                             Text(
                               content_list[index].caption,
@@ -335,66 +332,6 @@ class _SwipeState extends State<Swipe> {
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
                               ),
-                            ),
-
-                            SizedBox(height: 12.0),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    if (_matchEngine.currentItem == null) return;
-
-                                    _matchEngine.currentItem!.nope();
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 25.0,
-                                    backgroundColor: Colors.red,
-                                    child: Center(
-                                      child: const Icon(
-                                        FontAwesomeIcons.times,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    if (_matchEngine.currentItem == null) return;
-
-                                    _matchEngine.currentItem!.superLike();
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 20.0,
-                                    backgroundColor: Colors.blue,
-                                    child: Center(
-                                      child: const Icon(
-                                        FontAwesomeIcons.star,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    if (_matchEngine.currentItem == null) return;
-
-                                    _matchEngine.currentItem!.like();
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 25.0,
-                                    backgroundColor: Colors.green,
-                                    child: Center(
-                                      child: const Icon(
-                                        FontAwesomeIcons.check,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
                           ],
                         ),
@@ -410,6 +347,72 @@ class _SwipeState extends State<Swipe> {
                 duration: Duration(milliseconds: 500),
               ));
             },
+          ),
+        ),
+
+        SizedBox(height: 24.0),
+
+        Positioned(
+          bottom: 20.0,
+          left: 31.0,
+          right: 31.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  if (_matchEngine.currentItem == null) return;
+
+                  _matchEngine.currentItem!.nope();
+                },
+                child: CircleAvatar(
+                  radius: 25.0,
+                  backgroundColor: Colors.red,
+                  child: Center(
+                    child: const Icon(
+                      FontAwesomeIcons.times,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  if (_matchEngine.currentItem == null) return;
+
+                  _matchEngine.currentItem!.superLike();
+                },
+                child: CircleAvatar(
+                  radius: 20.0,
+                  backgroundColor: Colors.blue,
+                  child: Center(
+                    child: const Icon(
+                      FontAwesomeIcons.star,
+                      color: Colors.white,
+                      size: 14.0,
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  if (_matchEngine.currentItem == null) return;
+
+                  _matchEngine.currentItem!.like();
+                },
+                child: CircleAvatar(
+                  radius: 25.0,
+                  backgroundColor: Colors.green,
+                  child: Center(
+                    child: const Icon(
+                      FontAwesomeIcons.check,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -429,7 +432,7 @@ class _BlinkingActiveCircleState extends State<BlinkingActiveCircle>
   @override
   void initState() {
     _animationController =
-        new AnimationController(vsync: this, duration: Duration(seconds: 1));
+        new AnimationController(vsync: this, duration: Duration(milliseconds: 700));
     _animationController!.repeat(reverse: true);
     super.initState();
   }

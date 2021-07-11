@@ -1,60 +1,53 @@
-
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
-import '../styles.dart';
 
-class FrostyBackground extends StatelessWidget {
-  const FrostyBackground({
-    this.color,
-    this.intensity = 5,
-    this.child,
+class BigBox extends StatefulWidget {
+
+  String image;
+  final VoidCallback? onTap;
+
+  BigBox({
+    required this.image,
+    this.onTap,
   });
 
-  final Color color;
-  final double intensity;
-  final Widget child;
-
   @override
-  Widget build(BuildContext context) {
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: intensity, sigmaY: intensity),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: color,
-          ),
-          child: child,
-        ),
-      ),
-    );
-  }
+  _BigBoxState createState() => _BigBoxState();
 }
 
-/// A Card-like Widget that responds to tap events by animating changes to its
-/// elevation and invoking an optional [onPressed] callback.
+class _BigBoxState extends State<BigBox> {
+  @override
+  Widget build(BuildContext context) => Container(
+    child: PressableCard(
+      upElevation: 4,
+      downElevation: 2,
+      child: Image.asset(
+        (widget.image == null)
+          ? 'assets/loading/explore_card.jpg'
+          : widget.image,
+        fit: BoxFit.cover,
+      ),
+      onPressed: widget.onTap,
+    ),
+  );
+}
+
+
+
 class PressableCard extends StatefulWidget {
   const PressableCard({
-    @required this.child,
+    required this.child,
     this.borderRadius = const BorderRadius.all(Radius.circular(0)),
     this.upElevation = 2,
     this.downElevation = 0,
-    this.shadowColor = Styles.ArrivalPalletteGrey,
+    this.shadowColor = Colors.grey,
     this.duration = const Duration(milliseconds: 100),
+    this.color = Colors.grey,
     this.onPressed,
-    this.color = CupertinoColors.lightBackgroundGray,
-    Key key,
-  })  : assert(child != null),
-        assert(borderRadius != null),
-        assert(upElevation != null),
-        assert(downElevation != null),
-        assert(shadowColor != null),
-        assert(duration != null),
-        super(key: key);
+    Key? key,
+  }) : super(key: key);
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   final Widget child;
 
@@ -83,7 +76,7 @@ class _PressableCardState extends State<PressableCard> {
       onTap: () {
         setState(() => cardIsDown = false);
         if (widget.onPressed != null) {
-          widget.onPressed();
+          widget.onPressed!();
         }
       },
       onTapDown: (details) => setState(() => cardIsDown = true),
@@ -106,23 +99,17 @@ class _PressableCardState extends State<PressableCard> {
 
 class PressableCircle extends StatefulWidget {
   const PressableCircle({
-    @required this.child,
+    required this.child,
     this.radius = 30,
     this.upElevation = 2,
     this.downElevation = 0,
-    this.shadowColor = CupertinoColors.black,
+    this.shadowColor = Colors.black,
     this.duration = const Duration(milliseconds: 100),
     this.onPressed,
-    Key key,
-  })  : assert(child != null),
-        assert(radius != null),
-        assert(upElevation != null),
-        assert(downElevation != null),
-        assert(shadowColor != null),
-        assert(duration != null),
-        super(key: key);
+    Key? key,
+  }) : super(key: key);
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   final Widget child;
 
@@ -149,7 +136,7 @@ class _PressableCircleState extends State<PressableCircle> {
       onTap: () {
         setState(() => cardIsDown = false);
         if (widget.onPressed != null) {
-          widget.onPressed();
+          widget.onPressed!();
         }
       },
       onTapDown: (details) => setState(() => cardIsDown = true),
@@ -160,7 +147,7 @@ class _PressableCircleState extends State<PressableCircle> {
         shape: BoxShape.rectangle,
         shadowColor: widget.shadowColor,
         duration: widget.duration,
-        color: CupertinoColors.lightBackgroundGray,
+        color: Colors.grey,
         child: Transform.scale(
           scale: cardIsDown ? 0.95 : 1.0,
           child: AnimatedContainer(

@@ -92,7 +92,7 @@ class _DraggableCardState extends State<DraggableCard>
             dragStart = null;
             dragPosition = null;
             slideOutTween = null;
-
+            
             widget.onSlideOutComplete(slideOutDirection);
           });
         }

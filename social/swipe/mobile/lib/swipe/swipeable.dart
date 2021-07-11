@@ -176,7 +176,7 @@ class _SwipeableState extends State<Swipeable> {
 }
 
 class MatchEngine extends ChangeNotifier {
-  final List<SwipeItem> _swipeItems;
+  List<SwipeItem> _swipeItems;
   int _currentItemIndex = 0;
   int _nextItemIndex = 1;
 
@@ -209,6 +209,10 @@ class MatchEngine extends ChangeNotifier {
       if (currentItem != null) currentItem!.resetMatch();
       notifyListeners();
     }
+  }
+
+  void add(List<SwipeItem> list) {
+    _swipeItems += list;
   }
 }
 

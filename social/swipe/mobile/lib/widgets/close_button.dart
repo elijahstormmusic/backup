@@ -1,14 +1,17 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-import 'dart:ui';
 import 'package:flutter/material.dart';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 
-// import '../styles.dart';
+
+class CloseButton extends StatefulWidget {
+  const CloseButton(this.onPressed);
+
+  final VoidCallback onPressed;
+
+  @override
+  CloseButtonState createState() {
+    return CloseButtonState();
+  }
+}
 
 /// Partially overlays and then blurs its child's background.
 class FrostedBox extends StatelessWidget {
@@ -37,7 +40,7 @@ class FrostedBox extends StatelessWidget {
 class ColorChangingIcon extends ImplicitlyAnimatedWidget {
   const ColorChangingIcon(
     @required this.icon, {
-    this.color = CupertinoColors.black,
+    this.color = Colors.black,
     required this.size,
     required Duration duration,
     Key? key,
@@ -80,19 +83,7 @@ class _ColorChangingIconState
   }
 }
 
-/// A simple "close this modal" button that invokes a callback when pressed.
-class ArrCloseButton extends StatefulWidget {
-  const ArrCloseButton(this.onPressed);
-
-  final VoidCallback onPressed;
-
-  @override
-  CloseButtonState createState() {
-    return CloseButtonState();
-  }
-}
-
-class CloseButtonState extends State<ArrCloseButton> {
+class CloseButtonState extends State<CloseButton> {
   bool tapInProgress = false;
 
   @override
@@ -118,7 +109,7 @@ class CloseButtonState extends State<ArrCloseButton> {
             ),
             child: Center(
               child: ColorChangingIcon(
-                CupertinoIcons.back,
+                Icons.back,
                 duration: Duration(milliseconds: 300),
                 color: tapInProgress
                     ? Color(0xff808080)

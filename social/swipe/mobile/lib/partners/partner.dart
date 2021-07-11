@@ -1,39 +1,30 @@
-/// Code written and created by Elijah Storm
-// Copywrite April 5, 2020
-// for use only in ARRIVAL Project
-
 import 'dart:convert';
-import 'dart:math';
-import 'package:flutter/cupertino.dart';
-import 'package:meta/meta.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-// import '../data/arrival.dart';
-// import '../data/socket.dart';
-
-// import '../styles.dart';
-// import '../const.dart';
-
-import 'page.dart';
 import 'sale.dart';
-import 'industries.dart';
+import 'contact.dart';
+import 'display.dart';
+import 'cache.dart';
 
+import '../const.dart';
+
+
+class LatLng {
+  final double latitude = 0;
+  final double longitude = 0;
+
+  LatLng(latitude, longitude);
+}
 
 class Partner {
-  final int id;
   final String name;
-  final String shortDescription;
   final String cryptlink;
-  int yourRating;
-  double rating;
-  int ratingAmount;
+  final String shortDescription;
   final LatLng location;
-  final StoreImages images;
-  final SourceIndustry industry;
+  final List<String> images;
   final ContactList contact;
-  List<Sale> sales = List<Sale>();
-  bool isFavorite;
   final int priceRange;
+  List<Sale> sales = <Sale>[];
+  bool isFavorite;
 
   String priceRangeToString() {
     const priceText = '\$';
@@ -48,13 +39,10 @@ class Partner {
     return {
       'name': name,
       'cryptlink': cryptlink,
+      'info': shortDescription,
       'lat': location.latitude,
       'lng': location.longitude,
-      'info': shortDescription,
-      'rating': rating,
-      'ratingAmount': ratingAmount,
-      'industry': industry.index,
-      'images': images.toJson(),
+      'images': images,
       'contact': contact.toJson(),
       'priceRange': priceRange,
     };
@@ -64,79 +52,57 @@ class Partner {
   }
 
   Partner({
-    @required this.id,
-    @required this.name,
-    @required this.rating,
-    @required this.ratingAmount,
-    @required this.location,
-    @required this.images,
-    @required this.industry,
-    @required this.contact,
-    @required this.shortDescription,
-    @required this.sales,
-    @required this.cryptlink,
-    @required this.priceRange,
+    required this.name,
+    required this.cryptlink,
+    required this.shortDescription,
+    required this.location,
+    required this.images,
+    required this.contact,
+    required this.priceRange,
+    required this.sales,
     this.isFavorite = false,
   });
 
   static Partner json(var data) {
     return Partner(
-      id: Partner.index++,
       name: data['name'],
       cryptlink: data['cryptlink'],
-      location: LatLng(data['lat'], data['lng']),
       shortDescription: data['info'],
-      rating: data['rating'].toDouble(),
-      ratingAmount: data['ratingAmount'],
-      industry: SourceIndustry.values[data['industry']],
-      images: StoreImages(data['images']),
+      location: LatLng(data['lat'], data['lng']),
+      images: data['images'],
       contact: ContactList.json(data['contact']),
       priceRange: data['priceRange'],
-      sales: List<Sale>(),
+      sales: <Sale>[],
     );
   }
   static Partner link(String input) {
-    for (var i=0;i<ArrivalData.partners.length;i++) {
-      if (ArrivalData.partners[i].cryptlink==input) {
-        return ArrivalData.partners[i];
+    for (var i=0;i<PartnerCache.all.length;i++) {
+      if (PartnerCache.all[i].cryptlink==input) {
+        return PartnerCache.all[i];
       }
     }
+
     Partner P = Partner(
       cryptlink: input,
-      id: -1,
       name: 'none',
-      rating: 0,
-      ratingAmount: 0,
-      location: LatLng(0, 0),
-      images: StoreImages(<String>[Constants.loading_placeholder, Constants.loading_placeholder]),
-      industry: SourceIndustry.none,
-      contact: ContactList(),
       shortDescription: 'description',
-      sales: List<Sale>(),
+      location: LatLng(0, 0),
+      images: <String>[Constants.loading_placeholder, Constants.loading_placeholder],
+      contact: ContactList(),
+      sales: <Sale>[],
       priceRange: 2,
     );
+
     // socket.emit('partners link', {
     //   'link': input,
     // });
-    ArrivalData.innocentAdd(ArrivalData.partners, P);
+
+    PartnerCache.add(P);
+
     return P;
   }
+
   PartnerDisplayPage navigateTo() {
     return PartnerDisplayPage(cryptlink);
   }
-  static int index = 0;
-  static Partner blankPartner = Partner(
-    id: -1,
-    name: 'none',
-    rating: 0,
-    ratingAmount: 0,
-    location: LatLng(0, 0),
-    images: StoreImages(<String>[]),
-    industry: SourceIndustry.none,
-    contact: ContactList(),
-    shortDescription: 'description',
-    sales: List<Sale>(),
-    cryptlink: '',
-    priceRange: 2,
-  );
 }

@@ -1,20 +1,12 @@
-/// Code written and created by Elijah Storm
-// Copywrite April 5, 2020
-// for use only in ARRIVAL Project
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:scoped_model/scoped_model.dart';
 
-import '../data/preferences.dart';
 import '../widgets/cards.dart';
-import '../styles.dart';
 
 
 class CasingFavorites extends StatefulWidget {
 
-  void open(Map<String, dynamic> data) {}
+  void open(BuildContext context, Map<String, dynamic> data) {}
   Map<String, dynamic> generateListData(int index) => {};
   int listSize() => 0;
   void explore() => {};
@@ -25,7 +17,7 @@ class CasingFavorites extends StatefulWidget {
 }
 class CasingFavoritesBox extends StatefulWidget {
 
-  void open(Map<String, dynamic> data) {}
+  void open(BuildContext context, Map<String, dynamic> data) {}
   Map<String, dynamic> generateListData(int index) => {};
   int listSize() => 0;
   void explore() => {};
@@ -39,9 +31,27 @@ class CasingFavoritesBox extends StatefulWidget {
 
 class _CasingCircle extends State<CasingFavorites> {
 
-  List<Map<String, dynamic>> _rowButtonListData;
+  final double _fullSize = 75.0;
+  double _fullBoxSizeHeight = 0;
+  double _fullBoxSizeWidth = 0;
+  double _fullCasingSize = 0;
+
+  @override
+  void initState() {
+    _fullBoxSizeHeight = _fullSize;
+    _fullBoxSizeWidth = _fullSize * 0.80;
+    _fullCasingSize = _fullSize * .35;
+    _bookmarkLabel = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: _fullCasingSize / 2.5,
+    );
+    super.initState();
+  }
+
+  List<Map<String, dynamic>> _rowButtonListData = [];
   TextStyle _bookmarkLabel = TextStyle(
     fontWeight: FontWeight.bold,
+    fontSize: 10.0,
   );
 
   Map<String, dynamic> _generateGenericListData(int index) {
@@ -56,7 +66,7 @@ class _CasingCircle extends State<CasingFavorites> {
   }
   void _openGenericAction(int index) {
     if (index<0 && index>=_rowButtonListData.length) return;
-    widget.open(_rowButtonListData[index]);
+    widget.open(context, _rowButtonListData[index]);
   }
   String _capSize(String input) {
     int maxSize = 8;
@@ -66,14 +76,14 @@ class _CasingCircle extends State<CasingFavorites> {
 
   Widget _buildBookmarkedIcon(BuildContext context, bool hasBeenSeen, Widget display) {
     return CircleAvatar(
-      radius: hasBeenSeen ? 32 : 35,
-      backgroundColor: hasBeenSeen ? Styles.ArrivalPalletteGrey : Styles.ArrivalPalletteRed,
+      radius: hasBeenSeen ? _fullCasingSize - 3 : _fullCasingSize,
+      backgroundColor: hasBeenSeen ? Colors.grey : Colors.red,
       child: CircleAvatar(
-        radius: 31,
-        backgroundColor: Styles.ArrivalPalletteCream,
+        radius: _fullCasingSize - 2,
+        backgroundColor: Colors.white,
         child: CircleAvatar(
-          radius: 28,
-          backgroundColor: Styles.ArrivalPalletteBlack,
+          radius: _fullCasingSize - 5,
+          backgroundColor: Colors.black,
           child: display,
         ),
       ),
@@ -81,8 +91,7 @@ class _CasingCircle extends State<CasingFavorites> {
   }
   Widget _buildBookmark(BuildContext context, int index) {
     return Container(
-      padding: EdgeInsets.all(6),
-      width: 90,
+      width: _fullBoxSizeWidth * .9,
       child: Center(
         child: Column(
           children: [
@@ -92,21 +101,21 @@ class _CasingCircle extends State<CasingFavorites> {
               },
               downElevation: 1,
               upElevation: 5,
-              radius: 35,
-              shadowColor: Styles.ArrivalPalletteBlack,
+              radius: _fullCasingSize,
+              shadowColor: Colors.black,
               child: _buildBookmarkedIcon(
                 context,
                 _rowButtonListData[index]['story'] == null ? false :
                   _rowButtonListData[index]['story'].seen,
                 CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage(
+                  radius: _fullCasingSize - 5,
+                  backgroundImage: AssetImage(
                     _rowButtonListData[index]['icon'],
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 6),
+            SizedBox(height: _fullBoxSizeHeight / 10.0),
             GestureDetector(
               onTap: () {
                 _openGenericAction(index);
@@ -123,8 +132,7 @@ class _CasingCircle extends State<CasingFavorites> {
   }
   Widget _buildSearchForMoreButton(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(6),
-      width: 90,
+      width: _fullBoxSizeWidth * .9,
       child: Center(
         child: Column(
           children: [
@@ -134,19 +142,19 @@ class _CasingCircle extends State<CasingFavorites> {
               },
               downElevation: 1,
               upElevation: 5,
-              radius: 35,
-              shadowColor: Styles.ArrivalPalletteBlack,
+              radius: _fullCasingSize,
+              shadowColor: Colors.black,
               child: _buildBookmarkedIcon(
                 context,
                 false,
                 Icon(
                   Icons.add,
                   size: 25,
-                  color: Styles.ArrivalPalletteWhite,
+                  color: Colors.white,
                 ),
               ),
             ),
-            SizedBox(height: 6),
+            SizedBox(height: _fullBoxSizeHeight / 10.0),
             GestureDetector(
               onTap: () {
                 widget.explore();
@@ -162,12 +170,12 @@ class _CasingCircle extends State<CasingFavorites> {
     );
   }
   List<Widget> _generateFavorites(BuildContext context) {
-    List<Widget> yourFavs = List<Widget>();
-
-    yourFavs.add(Container(width: 6));
+    List<Widget> yourFavs = <Widget>[];
 
     for (int i=0;i<_rowButtonListData.length;i++) {
       yourFavs.add(_buildBookmark(context, i));
+
+      yourFavs.add(SizedBox(width: _fullBoxSizeHeight / 4.0));
     }
 
     yourFavs.add(_buildSearchForMoreButton(context));
@@ -182,11 +190,7 @@ class _CasingCircle extends State<CasingFavorites> {
                           );
 
     return Container(
-      height: 120,
-      padding: EdgeInsets.symmetric(
-        horizontal: 0,
-        vertical: 6,
-      ),
+      height: _fullBoxSizeHeight,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -198,11 +202,29 @@ class _CasingCircle extends State<CasingFavorites> {
 }
 class _CasingBox extends State<CasingFavoritesBox> {
 
-  List<Map<String, dynamic>> _rowButtonListData;
+  final double _fullSize = 75.0;
+  double _fullBoxSizeHeight = 0;
+  double _fullBoxSizeWidth = 0;
+  double _fullCasingSize = 0;
+
+  @override
+  void initState() {
+    _fullBoxSizeHeight = _fullSize;
+    _fullBoxSizeWidth = _fullSize * 0.80;
+    _fullCasingSize = _fullSize * .35;
+    _bookmarkLabel = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: _fullCasingSize / 2.0,
+      color: Colors.white,
+    );
+    super.initState();
+  }
+
+  List<Map<String, dynamic>> _rowButtonListData = [];
   TextStyle _bookmarkLabel = TextStyle(
     fontWeight: FontWeight.bold,
-    fontSize: 16,
-    color: Styles.ArrivalPalletteWhite,
+    fontSize: 12.0,
+    color: Colors.white,
   );
 
   Map<String, dynamic> _generateGenericListData(int index) {
@@ -217,7 +239,7 @@ class _CasingBox extends State<CasingFavoritesBox> {
   }
   void _openGenericAction(int index) {
     if (index<0 && index>=_rowButtonListData.length) return;
-    widget.open(_rowButtonListData[index]);
+    widget.open(context, _rowButtonListData[index]);
   }
   String _capSize(String input) {
     int maxSize = 16;
@@ -227,22 +249,20 @@ class _CasingBox extends State<CasingFavoritesBox> {
 
   Widget _buildBookmarkedIcon(BuildContext context, bool hasBeenSeen, Widget display) {
     return CircleAvatar(
-      radius: hasBeenSeen ? 32 : 35,
-      backgroundColor: hasBeenSeen ? Styles.ArrivalPalletteGrey : Styles.ArrivalPalletteRed,
+      radius: hasBeenSeen ? _fullCasingSize - 3 : _fullCasingSize,
+      backgroundColor: hasBeenSeen ? Colors.grey : Colors.red,
       child: CircleAvatar(
-        radius: 31,
-        backgroundColor: Styles.ArrivalPalletteCream,
+        radius: _fullCasingSize - 3,
+        backgroundColor: Colors.white60,
         child: CircleAvatar(
-          radius: 28,
-          backgroundColor: Styles.ArrivalPalletteBlack,
+          radius: _fullCasingSize - 5,
+          backgroundColor: Colors.black,
           child: display,
         ),
       ),
     );
   }
   Widget _buildBookmark(BuildContext context, int index) {
-    Preferences prefs = ScopedModel.of<Preferences>(context);
-
     return Container(
       child: PressableCard(
         onPressed: () {
@@ -250,18 +270,18 @@ class _CasingBox extends State<CasingFavoritesBox> {
         },
         downElevation: 1,
         upElevation: 5,
-        shadowColor: Styles.ArrivalPalletteBlack,
+        shadowColor: Colors.black,
         child: Stack(
           children: [
             Container(
-              width: 100,
-              height: 120,
+              width: _fullBoxSizeWidth,
+              height: _fullBoxSizeHeight,
               child: ColorFiltered(
                 colorFilter: ColorFilter.mode(
                   _rowButtonListData[index]['color'],
                   BlendMode.hardLight,
                 ),
-                child: Image.network(
+                child: Image.asset(
                   _rowButtonListData[index]['icon'],
                   fit: BoxFit.cover,
                 ),
@@ -271,31 +291,12 @@ class _CasingBox extends State<CasingFavoritesBox> {
               top: 8,
               left: 8,
               child: Container(
-                width: 84,
+                width: _fullBoxSizeWidth * .85,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    FutureBuilder<bool>(
-                      future: prefs.isBookmarked(widget.bookmarkableType(), _rowButtonListData[index]['link']),
-                      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) =>
-                      GestureDetector(
-                        onTap: () async {
-                          await prefs.toggleBookmarked(widget.bookmarkableType(), _rowButtonListData[index]['link']);
-                          setState(() => 0);
-                        },
-                        child: Icon(
-                          snapshot.hasData ?
-                            (snapshot.data ? Icons.star : Icons.star_border)
-                            : Icons.star_border,
-                          color: snapshot.hasData ?
-                            (snapshot.data ? Styles.ArrivalPalletteYellow : Styles.ArrivalPalletteWhite)
-                            : Styles.ArrivalPalletteWhite,
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: 12),
+                    SizedBox(height: _fullBoxSizeHeight / 10.0),
 
                     Text(
                       _capSize(_rowButtonListData[index]['name']),
@@ -318,28 +319,28 @@ class _CasingBox extends State<CasingFavoritesBox> {
         },
         downElevation: 1,
         upElevation: 5,
-        shadowColor: Styles.ArrivalPalletteBlack,
+        shadowColor: Colors.black,
         child: Stack(
           children: [
             Container(
-              width: 100,
-              height: 120,
-              color: Styles.ArrivalPalletteRed,
+              width: _fullBoxSizeWidth,
+              height: _fullBoxSizeHeight,
+              color: Colors.red,
             ),
             Positioned(
               top: 8,
               left: 8,
               child: Container(
-                width: 84,
+                width: _fullBoxSizeWidth * .85,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Icon(
                       Icons.add,
-                      color: Styles.ArrivalPalletteWhite,
+                      color: Colors.white,
                     ),
-                    SizedBox(height: 12),
+                    SizedBox(height: _fullBoxSizeHeight / 10.0),
                     Text(
                       widget.getExploreText(),
                       style: _bookmarkLabel,
@@ -354,7 +355,7 @@ class _CasingBox extends State<CasingFavoritesBox> {
     );
   }
   List<Widget> _generateFavorites(BuildContext context) {
-    List<Widget> yourFavs = List<Widget>();
+    List<Widget> yourFavs = <Widget>[];
 
     for (int i=1;i<_rowButtonListData.length;i++) {
       yourFavs.add(_buildBookmark(context, i));
@@ -372,8 +373,7 @@ class _CasingBox extends State<CasingFavoritesBox> {
                           );
 
     return Container(
-      height: 120,
-      margin: EdgeInsets.only(top: 6),
+      height: _fullBoxSizeHeight,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(

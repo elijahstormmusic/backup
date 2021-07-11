@@ -1,42 +1,31 @@
-/// Code written and created by Elijah Storm
-// Copywrite April 5, 2020
-// for use only in ARRIVAL Project
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
-
-// import '../data/arrival.dart';
-// import '../const.dart';
 
 import 'partner.dart';
-import 'page.dart';
+import 'display.dart';
+
+import '../const.dart';
+
 
 class Sale {
   static final String source =
     Constants.media_source;
   static final String default_img =
-    Constants.basic_plant_image;
+    Constants.media_source + 'loading/explore_card.jpg';
 
   final String cryptlink;
   final String name;
   final String info;
-  String pic;
+  final String pic;
   final Partner partner;
 
-  bool isOpen() {
-    return true;
-  }
 
   Sale({
-    @required this.cryptlink,
-    @required this.name,
-    @required this.info,
-    @required this.pic,
-    @required this.partner,
-  }) {
-    ArrivalData.innocentAdd(partner.sales, this);
-  }
+    required this.cryptlink,
+    required this.name,
+    required this.info,
+    required this.pic,
+    required this.partner,
+  });
 
   NetworkImage card_image() {
     if (pic==null) return NetworkImage(Sale.default_img);
@@ -64,10 +53,3 @@ class Sale {
     return PartnerDisplayPage(partner.cryptlink);
   }
 }
-Sale blankSale = Sale(
-  cryptlink: '',
-  name: 'no sale',
-  info: 'we apologize, but no sale could be found',
-  partner: Partner.blankPartner,
-  pic: Constants.basic_plant_image,
-);

@@ -12,7 +12,7 @@ class ContentAd extends SwipeableContent {
       sex: input['sex'],
       online: input['online'],
       verified: input['verified'],
-      id: input['id'],
+      cryptlink: input['cryptlink'],
     )
   { }
 }

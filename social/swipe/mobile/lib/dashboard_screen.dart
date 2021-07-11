@@ -15,8 +15,9 @@ import 'widgets/round_button.dart';
 import 'loader/loader.dart';
 import 'swipe/swipe.dart';
 // import 'maps/maps.dart';
-// import 'chat/chat.dart';
-// import 'explore/explore.dart';
+import 'maps/maps_placeholder.dart';
+import 'chat/chat.dart';
+import 'explore/explore.dart';
 
 
 class DashboardScreen extends StatefulWidget {
@@ -331,13 +332,13 @@ class _DashboardScreenState extends State<DashboardScreen>
         choice = Swipe();
         break;
       case 1:
-        // choice = Explore();
+        choice = Explore();
         break;
       case 2:
-        // choice = Maps();
+        choice = Maps();
         break;
       case 3:
-        // choice = Chat();
+        choice = Chat();
         break;
       default:
         choice = Swipe();
@@ -357,7 +358,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
   void _fadeIn() async {
-    await Future.();
+    // await Future.();
     setState(() => _onload = true);
   }
 
